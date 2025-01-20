@@ -1,0 +1,22 @@
+{
+	"geode": "4.1.1",
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
+	},
+	"id": "glowrock.better_unlock_progression",
+	"name": "Better Unlock Progression",
+	"version": "v1.0.0",
+	"developer": "GlowRock",
+	"description": "",
+	"resources": {
+		"sprites": [
+			"resources/*.png"
+		],
+        "files": [
+            "resources/levels_data.json"
+        ]
+    }
+}
