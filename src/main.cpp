@@ -1,6 +1,6 @@
 #include <Geode/Geode.hpp>
 
-#include "headers/UnlockProgressionPopup.hpp"
+#include "UnlockProgressionPopup.cpp"
 
 using namespace geode::prelude;
 

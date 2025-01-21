@@ -45,13 +45,15 @@ protected:
     float m_pageWidth;
     CCArray* m_pages = nullptr;
     int m_currentPage = 0;
-    const int m_totalPages = 21;
+    int m_totalPages = 21;
 
     CCMenuItemSpriteExtra* m_prevButton = nullptr;
     CCMenuItemSpriteExtra* m_nextButton = nullptr;
     CCSprite* navDotOnSpr = nullptr;
     CCSprite* navDotOffSpr = nullptr;
     std::vector<CCMenuItemSpriteExtra*> navDots;
+
+    bool showFriendPage;
 
     struct PlayerStats {
         int stars;
@@ -116,176 +118,295 @@ private:
         getAllStats();
 
         auto showStarPage = Mod::get()->getSettingValue<bool>("show-star-page");
+        auto showMoonPage = Mod::get()->getSettingValue<bool>("show-moon-page");
+        auto showSecretCoinPage = Mod::get()->getSettingValue<bool>("show-secret-coin-page");
+        auto showUserCoinPage = Mod::get()->getSettingValue<bool>("show-user-coin-page");
+        auto showDiamondPage = Mod::get()->getSettingValue<bool>("show-diamond-page");
+        auto showJumpPage = Mod::get()->getSettingValue<bool>("show-jump-page");
+        auto showAttemptPage = Mod::get()->getSettingValue<bool>("show-attempts-page");
+        auto showDestroyedPlayerPage = Mod::get()->getSettingValue<bool>("show-destroyed-players-page");
+        showFriendPage = Mod::get()->getSettingValue<bool>("show-friend-page");                             //has to be a class member due to friend refresh bug
+        auto showFollowCreatorPage = Mod::get()->getSettingValue<bool>("show-follow-creator-page");
+        auto showLikeDislikePage = Mod::get()->getSettingValue<bool>("show-like-dislike-page");
+        auto showRateStarsPage = Mod::get()->getSettingValue<bool>("show-rate-stars-page");
+        auto showInsanePage = Mod::get()->getSettingValue<bool>("show-insane-page");
+        auto showDemonPage = Mod::get()->getSettingValue<bool>("show-demon-page");
+        auto showOnlinePage = Mod::get()->getSettingValue<bool>("show-online-page");
+        auto showDailyPage = Mod::get()->getSettingValue<bool>("show-daily-page");
+        auto showMapPackPage = Mod::get()->getSettingValue<bool>("show-map-pack-page");
+        auto showGauntletPage = Mod::get()->getSettingValue<bool>("show-gauntlet-page");
+        auto showListPage = Mod::get()->getSettingValue<bool>("show-list-page");
+        auto showMostLikedPage = Mod::get()->getSettingValue<bool>("show-most-liked-level-page");
+        auto showRatedLevelPage = Mod::get()->getSettingValue<bool>("show-rated-level-page");
+
+        std::vector<std::string> modSettingKeys = {
+            "show-star-page", "show-moon-page", "show-secret-coin-page", "show-user-coin-page",
+            "show-diamond-page", "show-jump-page", "show-attempts-page", "show-destroyed-players-page",
+            "show-friend-page", "show-follow-creator-page", "show-like-dislike-page", "show-rate-stars-page",
+            "show-insane-page", "show-demon-page", "show-online-page", "show-daily-page",
+            "show-map-pack-page", "show-gauntlet-page", "show-list-page", "show-most-liked-level-page", "show-rated-level-page"
+        };
+
+        int disabledSettings = 0;
+        for (const auto& key : modSettingKeys) {
+            if (!Mod::get()->getSettingValue<bool>(key)) {
+                ++disabledSettings;
+            }
+        }
+        m_totalPages = 21 - disabledSettings;
 
         //create all progression pages
 
-        StarPage* starPage = new StarPage(this);
-        CCNode* starPageContainer = starPage->createStarPage(m_playerStats.stars);
-        starPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(starPageContainer);
-        m_pages->addObject(starPageContainer);
-        starPageContainer->setVisible(true);
-       
-        MoonPage* moonPage = new MoonPage(this);
-        CCNode* moonPageContainer = moonPage->createMoonPage(m_playerStats.moons);
-        moonPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(moonPageContainer);
-        m_pages->addObject(moonPageContainer);
-        moonPageContainer->setVisible(false);
+        bool disableArrows = false;
+
+        if (! (showStarPage || showMoonPage || showSecretCoinPage || showUserCoinPage || showDiamondPage || showJumpPage
+            || showAttemptPage || showDestroyedPlayerPage || showFriendPage || showFollowCreatorPage || showLikeDislikePage
+            || showRateStarsPage || showInsanePage || showDemonPage && showOnlinePage || showDailyPage || showMapPackPage
+            || showGauntletPage || showMostLikedPage || showRatedLevelPage))  {
+
+            auto disableText = CCLabelBMFont::create("You have disabled every page in the mod. Please enable a page to see something.", "bigFont-uhd.fnt");
+            disableText->setScale(0.3f);
+            disableText->setPosition({233, 130});
+            m_pageContainer->addChild(disableText);
+            disableArrows = true;
+        }
+
+        if (showStarPage) {
+
+            StarPage* starPage = new StarPage(this);
+            CCNode* starPageContainer = starPage->createStarPage(m_playerStats.stars);
+            starPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(starPageContainer);
+            m_pages->addObject(starPageContainer);
+            starPageContainer->setVisible(true);
+        }
+
+        if (showMoonPage) {
+
+            MoonPage* moonPage = new MoonPage(this);
+            CCNode* moonPageContainer = moonPage->createMoonPage(m_playerStats.moons);
+            moonPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(moonPageContainer);
+            m_pages->addObject(moonPageContainer);
+            moonPageContainer->setVisible(false);
+        }
         
 
-        SecretCoinPage* secretCoinsPage = new SecretCoinPage(this);
-        CCNode* secretCoinsPageContainer = secretCoinsPage->createSecretCoinPage(m_playerStats.secretCoins);
-        secretCoinsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(secretCoinsPageContainer);
-        m_pages->addObject(secretCoinsPageContainer);
-        secretCoinsPageContainer->setVisible(false);
+        if (showSecretCoinPage) {
 
-        UserCoinPage* userCoinsPage = new UserCoinPage(this);
-        CCNode* userCoinsPageContainer = userCoinsPage->createUserCoinPage(m_playerStats.userCoins);
-        userCoinsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(userCoinsPageContainer);
-        m_pages->addObject(userCoinsPageContainer);
-        userCoinsPageContainer->setVisible(false);
+            SecretCoinPage* secretCoinsPage = new SecretCoinPage(this);
+            CCNode* secretCoinsPageContainer = secretCoinsPage->createSecretCoinPage(m_playerStats.secretCoins);
+            secretCoinsPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(secretCoinsPageContainer);
+            m_pages->addObject(secretCoinsPageContainer);
+            secretCoinsPageContainer->setVisible(false);
+        }
 
-        DiamondPage* diamondsPage = new DiamondPage(this);
-        CCNode* diamondsPageContainer = diamondsPage->createDiamondPage(m_playerStats.diamonds);
-        diamondsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(diamondsPageContainer);
-        m_pages->addObject(diamondsPageContainer);
-        diamondsPageContainer->setVisible(false);
+        if (showUserCoinPage) {
+
+            UserCoinPage* userCoinsPage = new UserCoinPage(this);
+            CCNode* userCoinsPageContainer = userCoinsPage->createUserCoinPage(m_playerStats.userCoins);
+            userCoinsPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(userCoinsPageContainer);
+            m_pages->addObject(userCoinsPageContainer);
+            userCoinsPageContainer->setVisible(false);
+        }
+
+        if (showDiamondPage) {
+
+            DiamondPage* diamondsPage = new DiamondPage(this);
+            CCNode* diamondsPageContainer = diamondsPage->createDiamondPage(m_playerStats.diamonds);
+            diamondsPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(diamondsPageContainer);
+            m_pages->addObject(diamondsPageContainer);
+            diamondsPageContainer->setVisible(false);
+        }
 
 
-        JumpPage* jumpPage = new JumpPage(this);
-        CCNode* jumpPageContainer = jumpPage->createJumpPage(m_playerStats.jumps);
-        jumpPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(jumpPageContainer);
-        m_pages->addObject(jumpPageContainer);
-        jumpPageContainer->setVisible(false);
+        if (showJumpPage) {
 
-        AttemptPage* attemptPage = new AttemptPage(this);
-        CCNode* attemptPageContainer = attemptPage->createAttemptPage(m_playerStats.attempts);
-        attemptPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(attemptPageContainer);
-        m_pages->addObject(attemptPageContainer);
-        attemptPageContainer->setVisible(false);
+            JumpPage* jumpPage = new JumpPage(this);
+            CCNode* jumpPageContainer = jumpPage->createJumpPage(m_playerStats.jumps);
+            jumpPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(jumpPageContainer);
+            m_pages->addObject(jumpPageContainer);
+            jumpPageContainer->setVisible(false);
+        }
+
+        if (showAttemptPage) {
+
+            AttemptPage* attemptPage = new AttemptPage(this);
+            CCNode* attemptPageContainer = attemptPage->createAttemptPage(m_playerStats.attempts);
+            attemptPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(attemptPageContainer);
+            m_pages->addObject(attemptPageContainer);
+            attemptPageContainer->setVisible(false);
+        }
 
         
-        DestroyedPlayerPage* destroyedPlayersPage = new DestroyedPlayerPage(this);
-        CCNode* destroyedPlayersPageContainer = destroyedPlayersPage->createDestroyedPlayersPage(m_playerStats.destoryedPlayers);
-        destroyedPlayersPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(destroyedPlayersPageContainer);
-        m_pages->addObject(destroyedPlayersPageContainer);
-        destroyedPlayersPageContainer->setVisible(false);
+        if (showDestroyedPlayerPage) {
 
-        friendsPage = new FriendPage(this);
-        CCNode* friendsPageContainer = friendsPage->createFriendPage(m_playerStats.friends);
-        friendsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(friendsPageContainer);
-        m_pages->addObject(friendsPageContainer);
-        friendsPageContainer->setVisible(false);
+            DestroyedPlayerPage* destroyedPlayersPage = new DestroyedPlayerPage(this);
+            CCNode* destroyedPlayersPageContainer = destroyedPlayersPage->createDestroyedPlayersPage(m_playerStats.destoryedPlayers);
+            destroyedPlayersPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(destroyedPlayersPageContainer);
+            m_pages->addObject(destroyedPlayersPageContainer);
+            destroyedPlayersPageContainer->setVisible(false);
+        }
 
-        FollowCreatorPage* followCreatorsPage = new FollowCreatorPage(this);
-        CCNode* followCreatorsPageContainer = followCreatorsPage->createFollowedCreatorPage(m_playerStats.followedCreators);
-        followCreatorsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(followCreatorsPageContainer);
-        m_pages->addObject(followCreatorsPageContainer);
-        followCreatorsPageContainer->setVisible(false);
+        if (showFriendPage) {
 
+            friendsPage = new FriendPage(this);
+            CCNode* friendsPageContainer = friendsPage->createFriendPage(m_playerStats.friends);
+            friendsPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(friendsPageContainer);
+            m_pages->addObject(friendsPageContainer);
+            friendsPageContainer->setVisible(false);
+        }
 
-        LikeDislikeLevelPage* likeDislikeLevelsPage = new LikeDislikeLevelPage(this);
-        CCNode* likeDislikeLevelsPageContainer = likeDislikeLevelsPage->createLikeDislikeLevelPage(m_playerStats.likesAndDislikes);
-        likeDislikeLevelsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(likeDislikeLevelsPageContainer);
-        m_pages->addObject(likeDislikeLevelsPageContainer);
-        likeDislikeLevelsPageContainer->setVisible(false);
+        if (showFollowCreatorPage) {
 
-        RateStarsOfLevelsPage* rateStarsOfLevelsPage = new RateStarsOfLevelsPage(this);
-        CCNode* rateStarsOfLevelsPageContainer = rateStarsOfLevelsPage->createRateStarsOfLevelPage(m_playerStats.rateStarsOnLevels);
-        rateStarsOfLevelsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(rateStarsOfLevelsPageContainer);
-        m_pages->addObject(rateStarsOfLevelsPageContainer);
-        rateStarsOfLevelsPageContainer->setVisible(false);
+            FollowCreatorPage* followCreatorsPage = new FollowCreatorPage(this);
+            CCNode* followCreatorsPageContainer = followCreatorsPage->createFollowedCreatorPage(m_playerStats.followedCreators);
+            followCreatorsPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(followCreatorsPageContainer);
+            m_pages->addObject(followCreatorsPageContainer);
+            followCreatorsPageContainer->setVisible(false);
+        }
 
 
-        CompletedInsaneLevelPage* insaneLevelsPage = new CompletedInsaneLevelPage(this);
-        CCNode* insaneLevelsPageContainer = insaneLevelsPage->createInsaneLevelPage(m_playerStats.completedInsanes);
-        insaneLevelsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(insaneLevelsPageContainer);
-        m_pages->addObject(insaneLevelsPageContainer);
-        insaneLevelsPageContainer->setVisible(false);
+        if (showLikeDislikePage) {
 
-        CompletedDemonPage* demonLevelsPage = new CompletedDemonPage(this);
-        CCNode* demonLevelsPageContainer = demonLevelsPage->createDemonLevelPage(m_playerStats.completedDemons);
-        demonLevelsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(demonLevelsPageContainer);
-        m_pages->addObject(demonLevelsPageContainer);
-        demonLevelsPageContainer->setVisible(false);
+            LikeDislikeLevelPage* likeDislikeLevelsPage = new LikeDislikeLevelPage(this);
+            CCNode* likeDislikeLevelsPageContainer = likeDislikeLevelsPage->createLikeDislikeLevelPage(m_playerStats.likesAndDislikes);
+            likeDislikeLevelsPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(likeDislikeLevelsPageContainer);
+            m_pages->addObject(likeDislikeLevelsPageContainer);
+            likeDislikeLevelsPageContainer->setVisible(false);
+        }
 
-        CompletedOnlineLevelPage* completedOnlineLevelsPage = new CompletedOnlineLevelPage(this);
-        CCNode* completedOnlineLevelsPageContainer = completedOnlineLevelsPage->createCompleteOnlinePage(m_playerStats.completedOnline);
-        completedOnlineLevelsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(completedOnlineLevelsPageContainer);
-        m_pages->addObject(completedOnlineLevelsPageContainer);
-        completedOnlineLevelsPageContainer->setVisible(false);
+        if (showRateStarsPage) {
 
-        CompletedDailies* completedDailyLevelsPage = new CompletedDailies(this);
-        CCNode* completedDailyLevelsPageContainer = completedDailyLevelsPage->createCompletedDailiesPage(m_playerStats.completedDaily);
-        completedDailyLevelsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(completedDailyLevelsPageContainer);
-        m_pages->addObject(completedDailyLevelsPageContainer);
-        completedDailyLevelsPageContainer->setVisible(false);
+            RateStarsOfLevelsPage* rateStarsOfLevelsPage = new RateStarsOfLevelsPage(this);
+            CCNode* rateStarsOfLevelsPageContainer = rateStarsOfLevelsPage->createRateStarsOfLevelPage(m_playerStats.rateStarsOnLevels);
+            rateStarsOfLevelsPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(rateStarsOfLevelsPageContainer);
+            m_pages->addObject(rateStarsOfLevelsPageContainer);
+            rateStarsOfLevelsPageContainer->setVisible(false);
+        }
 
 
-        CompletedMapPackPage* completedMapPacksPage = new CompletedMapPackPage(this);
-        CCNode* completedMapPacksPageContainer = completedMapPacksPage->createCompletedMapPackPage(m_playerStats.completedMapPacks);
-        completedMapPacksPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(completedMapPacksPageContainer);
-        m_pages->addObject(completedMapPacksPageContainer);
-        completedMapPacksPageContainer->setVisible(false);
+        if (showInsanePage) {
 
-        CompletedGauntletPage* completedGauntletsPage = new CompletedGauntletPage(this);
-        CCNode* completedGauntletsPageContainer = completedGauntletsPage->createCompletedGauntletPage(m_playerStats.completedGauntlets);
-        completedGauntletsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(completedGauntletsPageContainer);
-        m_pages->addObject(completedGauntletsPageContainer);
-        completedGauntletsPageContainer->setVisible(false);
+            CompletedInsaneLevelPage* insaneLevelsPage = new CompletedInsaneLevelPage(this);
+            CCNode* insaneLevelsPageContainer = insaneLevelsPage->createInsaneLevelPage(m_playerStats.completedInsanes);
+            insaneLevelsPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(insaneLevelsPageContainer);
+            m_pages->addObject(insaneLevelsPageContainer);
+            insaneLevelsPageContainer->setVisible(false);
+        }
 
-        CompletedListPage* completedListsPage = new CompletedListPage(this);
-        CCNode* completedListsPageContainer = completedListsPage->createCompletedListPage(m_playerStats.completedLists);
-        completedListsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(completedListsPageContainer);
-        m_pages->addObject(completedListsPageContainer);
-        completedListsPageContainer->setVisible(false);
+        if (showDemonPage) {
+
+            CompletedDemonPage* demonLevelsPage = new CompletedDemonPage(this);
+            CCNode* demonLevelsPageContainer = demonLevelsPage->createDemonLevelPage(m_playerStats.completedDemons);
+            demonLevelsPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(demonLevelsPageContainer);
+            m_pages->addObject(demonLevelsPageContainer);
+            demonLevelsPageContainer->setVisible(false);
+        }
+
+        if (showOnlinePage) {
+
+            CompletedOnlineLevelPage* completedOnlineLevelsPage = new CompletedOnlineLevelPage(this);
+            CCNode* completedOnlineLevelsPageContainer = completedOnlineLevelsPage->createCompleteOnlinePage(m_playerStats.completedOnline);
+            completedOnlineLevelsPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(completedOnlineLevelsPageContainer);
+            m_pages->addObject(completedOnlineLevelsPageContainer);
+            completedOnlineLevelsPageContainer->setVisible(false);
+        }
+
+        if (showDailyPage) {
+
+            CompletedDailies* completedDailyLevelsPage = new CompletedDailies(this);
+            CCNode* completedDailyLevelsPageContainer = completedDailyLevelsPage->createCompletedDailiesPage(m_playerStats.completedDaily);
+            completedDailyLevelsPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(completedDailyLevelsPageContainer);
+            m_pages->addObject(completedDailyLevelsPageContainer);
+            completedDailyLevelsPageContainer->setVisible(false);
+        }
 
 
-        LikesOnYourLevelPage* likesOnYourLevelPage = new LikesOnYourLevelPage(this);
-        CCNode* likesOnYourLevelPageContainer = likesOnYourLevelPage->createLikesOnYourLevelPage();
-        likesOnYourLevelPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(likesOnYourLevelPageContainer);
-        m_pages->addObject(likesOnYourLevelPageContainer);
-        likesOnYourLevelPageContainer->setVisible(false);
+        if (showMapPackPage) {
 
-        RatedLevelPage* ratedLevelPage = new RatedLevelPage(this);
-        CCNode* ratedLevelPageContainer = ratedLevelPage->createRatedLevelPage();
-        ratedLevelPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(ratedLevelPageContainer);
-        m_pages->addObject(ratedLevelPageContainer);
-        ratedLevelPageContainer->setVisible(false);
+            CompletedMapPackPage* completedMapPacksPage = new CompletedMapPackPage(this);
+            CCNode* completedMapPacksPageContainer = completedMapPacksPage->createCompletedMapPackPage(m_playerStats.completedMapPacks);
+            completedMapPacksPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(completedMapPacksPageContainer);
+            m_pages->addObject(completedMapPacksPageContainer);
+            completedMapPacksPageContainer->setVisible(false);
+        }
 
-        createNavigationButtons();
+        if (showGauntletPage) {
 
-        createBottomNavigationButtons();
+            CompletedGauntletPage* completedGauntletsPage = new CompletedGauntletPage(this);
+            CCNode* completedGauntletsPageContainer = completedGauntletsPage->createCompletedGauntletPage(m_playerStats.completedGauntlets);
+            completedGauntletsPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(completedGauntletsPageContainer);
+            m_pages->addObject(completedGauntletsPageContainer);
+            completedGauntletsPageContainer->setVisible(false);
+        }
+
+        if (showListPage) {
+
+            CompletedListPage* completedListsPage = new CompletedListPage(this);
+            CCNode* completedListsPageContainer = completedListsPage->createCompletedListPage(m_playerStats.completedLists);
+            completedListsPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(completedListsPageContainer);
+            m_pages->addObject(completedListsPageContainer);
+            completedListsPageContainer->setVisible(false);
+        }
+
+
+        if (showMostLikedPage) {
+
+            LikesOnYourLevelPage* likesOnYourLevelPage = new LikesOnYourLevelPage(this);
+            CCNode* likesOnYourLevelPageContainer = likesOnYourLevelPage->createLikesOnYourLevelPage();
+            likesOnYourLevelPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(likesOnYourLevelPageContainer);
+            m_pages->addObject(likesOnYourLevelPageContainer);
+            likesOnYourLevelPageContainer->setVisible(false);
+        }
+
+        if (showRatedLevelPage) {
+
+            RatedLevelPage* ratedLevelPage = new RatedLevelPage(this);
+            CCNode* ratedLevelPageContainer = ratedLevelPage->createRatedLevelPage();
+            ratedLevelPageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(ratedLevelPageContainer);
+            m_pages->addObject(ratedLevelPageContainer);
+            ratedLevelPageContainer->setVisible(false);
+        }
+
+        if (! disableArrows) {
+
+            if (m_totalPages != 1) {
+                createNavigationButtons();
+            }
+            createBottomNavigationButtons();
+        }
+
+        setupInitialPage();
 
         return true;
     }
 
     void createBackgroundUI() {
 
-        auto titleSpr = CCSprite::create("Better_Unlock_Progression.png"_spr);
-        titleSpr->setPosition({234.5f, 227});
-        titleSpr->setScale(.65f);
-        m_buttonMenu->addChild(titleSpr);
+        //auto titleSpr = CCSprite::create("Better_Unlock_Progression.png"_spr);
+        //titleSpr->setPosition({234.5f, 227});
+        //titleSpr->setScale(.65f);
+        //m_buttonMenu->addChild(titleSpr);
 
         auto bottomLeftCornerSpr = CCSprite::createWithSpriteFrameName("dailyLevelCorner_001.png");
         bottomLeftCornerSpr->setAnchorPoint({0, 0});
@@ -369,18 +490,21 @@ private:
         navDotOnSpr = CCSprite::createWithSpriteFrameName("gj_navDotBtn_on_001.png");
         navDotOffSpr = CCSprite::createWithSpriteFrameName("gj_navDotBtn_off_001.png");
 
-        const float initialX = -291;
         const float y = -175;
         const float spacing = 24;
 
-        for (int i = 0; i <= 20; ++i) {
+        float totalWidth = m_totalPages * spacing;
+
+        float startX = -51 - (totalWidth / 2) + (spacing / 2);
+
+        for (int i = 0; i < m_totalPages; ++i) {
             auto button = CCMenuItemSpriteExtra::create(
                 CCSprite::createWithSpriteFrameName(i == 0 ? "gj_navDotBtn_on_001.png" : "gj_navDotBtn_off_001.png"),
                 this,
                 menu_selector(UnlockProgressionPopup::onPageBtn)
             );
             button->setTag(i);
-            button->setPosition({initialX + i * spacing, y});
+            button->setPosition({startX + i * spacing, y});
             navDots.push_back(button);
             navContainer->addChild(button);
         }
@@ -393,6 +517,29 @@ private:
         auto button = static_cast<CCMenuItemSpriteExtra*>(sender);
         m_currentPage = button->getTag();
         updatePageVisibility();
+    }
+
+    void setupInitialPage() {
+        m_currentPage = 0;
+
+        // Find the first enabled page
+        for (int i = 0; i < m_pages->count(); ++i) {
+            if (isPageEnabled(i)) {
+                m_currentPage = i;
+                break;
+            }
+        }
+
+        updatePageVisibility();
+    }
+
+    bool isPageEnabled(int index) {
+
+        if (index < 0 || index >= m_pages->count()) {
+            return false;
+        }
+        auto page = static_cast<CCNode*>(m_pages->objectAtIndex(index));
+        return page != nullptr && page->isVisible();
     }
 
     void onPrevPage(CCObject*) {
@@ -415,9 +562,15 @@ private:
             runtime is *slightly* worse because of this hotfix
             I may fix this in the future
         */
-        if (m_playerStats.friends == -1) {
+        if (m_playerStats.friends == -1 && showFriendPage) {
             m_playerStats.friends = processFriends.fetchFriendCount();
             friendsPage->updateFriendCount(m_playerStats.friends);
+        }
+        if (m_pages->count() == 0) {
+            return;
+        }
+        if (m_currentPage >= m_pages->count()) {
+            m_currentPage = 0;
         }
         for (int i = 0; i < m_pages->count(); ++i) {
             auto page = static_cast<CCNode*>(m_pages->objectAtIndex(i));
@@ -479,11 +632,11 @@ private:
         m_playerStats.completedDemons = 0;
         m_playerStats.completedOnline = 0;
         m_playerStats.completedDaily = 0;
-        m_playerStats.completedMapPacks = 0; 
+        m_playerStats.completedMapPacks = 0;
         m_playerStats.completedGauntlets = 0;
         m_playerStats.completedLists = 0;
-        m_playerStats.maxLikes = 0;                //assigned at a refresh button due to api rate limiting
-        m_playerStats.ratedLevels = 0;            //assigned at a refresh button due to api rate limiting
+        m_playerStats.maxLikes = 0;
+        m_playerStats.ratedLevels = 0;
         */
     }
 };

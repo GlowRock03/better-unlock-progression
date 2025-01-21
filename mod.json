@@ -1,5 +1,5 @@
 {
-	"geode": "4.1.1",
+	"geode": "4.2.0",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -11,6 +11,140 @@
 	"version": "v1.0.0",
 	"developer": "GlowRock",
 	"description": "",
+	"settings": {
+        "toggle-player-colors": {
+            "name": "Toggle Player Colours",
+            "description": "Show your player colours on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-star-page": {
+            "name": "Show Stars Page",
+            "description": "Show the Stars Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-moon-page": {
+            "name": "Show Moons Page",
+            "description": "Show the Moons Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-secret-coin-page": {
+            "name": "Show Secret Coins Page",
+            "description": "Show the Secret Coins Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-user-coin-page": {
+            "name": "Show User Coins Page",
+            "description": "Show the User Coins Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-diamond-page": {
+            "name": "Show Diamonds Page",
+            "description": "Show the Diamonds Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-jump-page": {
+            "name": "Show Jump Page",
+            "description": "Show the Jump Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-attempts-page": {
+            "name": "Show Attempts Page",
+            "description": "Show the Attempts Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-destroyed-players-page": {
+            "name": "Show Destroyed Players Page",
+            "description": "Show the Destroyed Players Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-friend-page": {
+            "name": "Show Friends Page",
+            "description": "Show the Friends Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-follow-creator-page": {
+            "name": "Show Follow Creators Page",
+            "description": "Show the Follow Creators Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-like-dislike-page": {
+            "name": "Show Like/Dislike Online Levels Page",
+            "description": "Show the Like/Dislike Online Levels Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-rate-stars-page": {
+            "name": "Show Rate Stars on Online Levels Page",
+            "description": "Show the Rate Stars on Online Levels Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-insane-page": {
+            "name": "Show Completed Insane Page",
+            "description": "Show the Completed Insane Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-demon-page": {
+            "name": "Show Completed Demon Page",
+            "description": "Show the Completed Demon Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-online-page": {
+            "name": "Show Completed Online Levels Page",
+            "description": "Show the Completed Online Levels Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-daily-page": {
+            "name": "Show Completed Daily Levels Page",
+            "description": "Show the Completed Daily Levels Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-map-pack-page": {
+            "name": "Show Completed Map Packs Page",
+            "description": "Show the Completed Map Packs Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-gauntlet-page": {
+            "name": "Show Completed Gauntlets Page",
+            "description": "Show the Completed Gauntlets Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-list-page": {
+            "name": "Show Completed Lists Page",
+            "description": "Show the Completed Lists Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-most-liked-level-page": {
+            "name": "Show Your Most Liked Level Page",
+            "description": "Show the Your Most Liked Level Page on the mod menu",
+            "type": "bool",
+            "default": true
+        },
+		"show-rated-level-page": {
+            "name": "Show Your Rated Levels Page",
+            "description": "Show the Your Rated Levels Page on the mod menu",
+            "type": "bool",
+            "default": true
+        }
+	},
 	"resources": {
 		"sprites": [
 			"resources/*.png"
