@@ -120,10 +120,31 @@ public:
 
         currentPage = 0;
 
-        auto labelSpr = CCSprite::create("Total_Attempts_Title.png"_spr);
-        labelSpr->setPosition({227.5f, 193});
-        labelSpr->setScale(.8f);
+        auto labelSpr = CCSprite::create("attempts_spr.png"_spr);
+        labelSpr->setPosition({227.5f, 185});
+        labelSpr->setScale(0.65f);
         pageContainer->addChild(labelSpr);
+
+        auto player = SimplePlayer::create(1);
+        player->updatePlayerFrame(gameManager->m_playerFrame, IconType::Cube);
+        player->setColors(gameManager->colorForIdx(gameManager->getPlayerColor()), gameManager->colorForIdx(gameManager->getPlayerColor2()));
+        if (gameManager->m_playerGlow) {
+            player->setGlowOutline(gameManager->colorForIdx(gameManager->getPlayerGlowColor()));
+        }
+        player->setPosition({221, 193});
+        player->setScale(0.77f);
+        pageContainer->addChild(player);
+
+        auto label2Spr = CCSprite::create("attempts_spike_spr.png"_spr);
+        label2Spr->setPosition({227.5f, 185});
+        label2Spr->setScale(0.65f);
+        pageContainer->addChild(label2Spr);
+
+        auto label3Spr = CCSprite::create("attempts_death_spr.png"_spr);
+        label3Spr->setPosition({228.5f, 184});
+        label3Spr->setOpacity(220.f);
+        label3Spr->setScale(0.65f);
+        pageContainer->addChild(label3Spr);
 
         tier1Page = createTier1(attempts);
         tier1Page->retain();

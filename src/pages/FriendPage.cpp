@@ -124,10 +124,36 @@ public:
 
         currentPage = 0;
 
-        auto labelSpr = CCSprite::create("Your_Friends_Title.png"_spr);
-        labelSpr->setPosition({227.5f, 193});
-        labelSpr->setScale(.8f);
+        auto labelSpr = CCSprite::create("friends_spr.png"_spr);
+        labelSpr->setPosition({227.5f, 185});
+        labelSpr->setScale(0.65f);
         pageContainer->addChild(labelSpr);
+
+        auto player = SimplePlayer::create(1);
+        player->updatePlayerFrame(gameManager->m_playerFrame, IconType::Cube);
+        player->setColors(gameManager->colorForIdx(gameManager->getPlayerColor()), gameManager->colorForIdx(gameManager->getPlayerColor2()));
+        if (gameManager->m_playerGlow) {
+            player->setGlowOutline(gameManager->colorForIdx(gameManager->getPlayerGlowColor()));
+        }
+        player->setPosition({189, 200});
+        player->setScale(1.35f);
+        pageContainer->addChild(player);
+
+        auto player2 = SimplePlayer::create(1);
+        player2->updatePlayerFrame(47, IconType::Cube);
+        player2->setColors(ccc3(175, 175, 175), ccc3(253, 212, 206));
+        player2->setGlowOutline(ccc3(253, 212, 206));
+        player2->setPosition({227.5f, 201});
+        player2->setScale(0.8f);
+        pageContainer->addChild(player2);
+
+        auto player3 = SimplePlayer::create(1);
+        player3->updatePlayerFrame(122, IconType::Cube);
+        player3->setColors(ccc3(255, 0, 0), ccc3(0, 125, 255));
+        player3->setGlowOutline(ccc3(0, 125, 255));
+        player3->setPosition({266, 200});
+        player3->setScale(1.35f);
+        pageContainer->addChild(player3);
 
         tier1Page = createTier1(friends);
         tier1Page->retain();

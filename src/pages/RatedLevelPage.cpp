@@ -110,10 +110,25 @@ public:
 
         currentPage = 0;
 
-        auto labelSpr = CCSprite::create("Your_Rated_Levels_Title.png"_spr);
-        labelSpr->setPosition({227.5f, 193});
-        labelSpr->setScale(.8f);
+        auto labelSpr = CCSprite::create("creator_points_spr.png"_spr);
+        labelSpr->setPosition({227.5f, 185});
+        labelSpr->setScale(0.65f);
         pageContainer->addChild(labelSpr);
+
+        auto player = SimplePlayer::create(1);
+        player->updatePlayerFrame(gameManager->m_playerFrame, IconType::Cube);
+        player->setColors(gameManager->colorForIdx(gameManager->getPlayerColor()), gameManager->colorForIdx(gameManager->getPlayerColor2()));
+        if (gameManager->m_playerGlow) {
+            player->setGlowOutline(gameManager->colorForIdx(gameManager->getPlayerGlowColor()));
+        }
+        player->setPosition({228, 200});
+        player->setScale(1.35f);
+        pageContainer->addChild(player);
+
+        auto labelTopSpr = CCSprite::create("creator_points_top_spr.png"_spr);
+        labelTopSpr->setPosition({228.25f, 175});
+        labelTopSpr->setScale(0.5f);
+        pageContainer->addChild(labelTopSpr);
 
         tier1Page = createTier1(ratedLevels);
         tier1Page->retain();

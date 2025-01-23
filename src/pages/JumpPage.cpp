@@ -114,10 +114,21 @@ public:
 
         currentPage = 0;
 
-        auto labelSpr = CCSprite::create("Jumps_Title.png"_spr);
-        labelSpr->setPosition({227.5f, 193});
-        labelSpr->setScale(.8f);
+        auto labelSpr = CCSprite::create("jumps_spr.png"_spr);
+        labelSpr->setPosition({227.5f, 185});
+        labelSpr->setScale(0.65f);
         pageContainer->addChild(labelSpr);
+
+        auto player = SimplePlayer::create(1);
+        player->updatePlayerFrame(gameManager->m_playerFrame, IconType::Cube);
+        player->setColors(gameManager->colorForIdx(gameManager->getPlayerColor()), gameManager->colorForIdx(gameManager->getPlayerColor2()));
+        if (gameManager->m_playerGlow) {
+            player->setGlowOutline(gameManager->colorForIdx(gameManager->getPlayerGlowColor()));
+        }
+        player->setPosition({215.5, 208});
+        player->setRotation(18.f);
+        player->setScale(0.85f);
+        pageContainer->addChild(player);
 
         tier1Page = createTier1(jumps);
         tier1Page->retain();

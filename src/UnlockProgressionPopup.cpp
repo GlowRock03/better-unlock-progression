@@ -5,6 +5,7 @@
 #include <Geode/modify/GJGarageLayer.hpp>
 #include <Geode/utils/web.hpp>
 #include <Geode/loader/Event.hpp>
+#include <Geode/binding/ProfilePage.hpp>
 
 #include "classes/ProcessTotalFriends.cpp"
 
@@ -403,18 +404,20 @@ private:
 
     void createBackgroundUI() {
 
-        //auto titleSpr = CCSprite::create("Better_Unlock_Progression.png"_spr);
-        //titleSpr->setPosition({234.5f, 227});
-        //titleSpr->setScale(.65f);
-        //m_buttonMenu->addChild(titleSpr);
-
-        auto bottomLeftCornerSpr = CCSprite::createWithSpriteFrameName("dailyLevelCorner_001.png");
-        bottomLeftCornerSpr->setAnchorPoint({0, 0});
-        auto bottomLeftNode = CCNode::create();
-        bottomLeftNode->setPosition({0, 0});
-        bottomLeftNode->setZOrder(-1);
-        bottomLeftNode->addChild(bottomLeftCornerSpr);
-        m_buttonMenu->addChild(bottomLeftNode);
+        auto titleSpr = CCSprite::create("better_unlock_progression_title_spr.png"_spr);
+        titleSpr->setPosition({75, 25});
+        titleSpr->setScale(.4f);
+        m_buttonMenu->addChild(titleSpr);
+        
+        auto creatorTitleSpr = CCSprite::create("creator_title_spr.png"_spr);
+        creatorTitleSpr->setScale(.4f);
+        auto creatorTitleButton = CCMenuItemSpriteExtra::create(
+            creatorTitleSpr,
+            this,
+            menu_selector(UnlockProgressionPopup::openProfile)
+        );
+        creatorTitleButton->setPosition({373, 12});
+        m_buttonMenu->addChild(creatorTitleButton);
 
         auto topLeftCornerSpr = CCSprite::createWithSpriteFrameName("dailyLevelCorner_001.png");
         topLeftCornerSpr->setAnchorPoint({0, 0});
@@ -510,6 +513,11 @@ private:
         }
 
         m_buttonMenu->addChild(navContainer);
+    }
+
+    void openProfile(CCObject*) {
+
+        this->addChild(ProfilePage::create(7472440, false));
     }
 
     void onPageBtn(CCObject* sender) {

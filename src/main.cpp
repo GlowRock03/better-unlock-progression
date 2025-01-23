@@ -14,7 +14,7 @@ class $modify(MyGJGarageLayer, GJGarageLayer) {
 		}
 
         auto myButton = CCMenuItemSpriteExtra::create(
-			CCSprite::createWithSpriteFrameName("GJ_statsBtn_001.png"),
+			CCSprite::create("mod_button.png"_spr),
 			this,
 			menu_selector(MyGJGarageLayer::onMyButton)
 		);
@@ -28,7 +28,7 @@ class $modify(MyGJGarageLayer, GJGarageLayer) {
 	}
 
 	void onMyButton(CCObject*) {
-		// Show the custom popup with a sample message
+
 		auto popup = UnlockProgressionPopup::create("Icon progression");
 		if (popup) {
 			

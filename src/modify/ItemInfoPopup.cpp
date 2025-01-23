@@ -39,8 +39,6 @@ private:
             return;
         }
 
-        log::info("itemicon type: {}", typeid(*itemIcon).name());
-
         // Iterate through children of itemIcon
         CCArray* children = itemIcon->getChildren();
         if (!children) {

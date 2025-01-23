@@ -97,10 +97,31 @@ public:
 
         currentPage = 0;
 
-        auto labelSpr = CCSprite::create("Destroyed_Players_Title.png"_spr);
-        labelSpr->setPosition({227.5f, 193});
-        labelSpr->setScale(.8f);
+        auto labelSpr = CCSprite::create("destroyed_players_spr.png"_spr);
+        labelSpr->setPosition({227.5f, 185});
+        labelSpr->setScale(0.65f);
         pageContainer->addChild(labelSpr);
+
+        auto player = SimplePlayer::create(1);
+        player->updatePlayerFrame(gameManager->m_playerFrame, IconType::Cube);
+        player->setColors(gameManager->colorForIdx(gameManager->getPlayerColor()), gameManager->colorForIdx(gameManager->getPlayerColor2()));
+        if (gameManager->m_playerGlow) {
+            player->setGlowOutline(gameManager->colorForIdx(gameManager->getPlayerGlowColor()));
+        }
+        player->setPosition({227.5f, 195});
+        player->setScale(0.77f);
+        pageContainer->addChild(player);
+
+        auto label2Spr = CCSprite::create("destroyed_players_cursor_spr.png"_spr);
+        label2Spr->setPosition({228, 188});
+        label2Spr->setScale(0.5f);
+        pageContainer->addChild(label2Spr);
+
+        auto label3Spr = CCSprite::create("destroyed_players_death_spr.png"_spr);
+        label3Spr->setPosition({229, 185});
+        label3Spr->setOpacity(220.f);
+        label3Spr->setScale(0.65f);
+        pageContainer->addChild(label3Spr);
 
         tier1Page = createTier1(destroyedPlayers);
         tier1Page->retain();
