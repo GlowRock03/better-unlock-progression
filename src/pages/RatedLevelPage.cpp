@@ -522,8 +522,8 @@ private:
         }
 
         /* First Row */
-        sliderBarSpr1->setAnchorPoint({ 0, .5f }); sliderBarSpr1->setZOrder({-1}); sliderBarSpr1->setPosition({-28.5f, 122.5f});
-        sliderOutlineSpr1->setAnchorPoint({ 0, .5f }); sliderOutlineSpr1->setScaleX({1.1f}); sliderOutlineSpr1->setPosition({-30.5f, 122.5f});      
+        sliderBarSpr1->setAnchorPoint({ 0, .5f }); sliderBarSpr1->setZOrder(-1); sliderBarSpr1->setPosition({-28.5f, 122.5f});
+        sliderOutlineSpr1->setAnchorPoint({ 0, .5f }); sliderOutlineSpr1->setScaleX(1.1f); sliderOutlineSpr1->setPosition({-30.5f, 122.5f});      
         lock1->setZOrder(1);
         unlockText1->setScale(.5f); unlockText1->setPosition({33, 92.5f});
 

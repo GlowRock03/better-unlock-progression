@@ -426,20 +426,20 @@ private:
         }
 
         /* First Row */
-        sliderBarSpr1->setAnchorPoint({ 0, .5f }); sliderBarSpr1->setZOrder({-1}); sliderBarSpr1->setPosition({-115, 150});
-        sliderOutlineSpr1->setAnchorPoint({ 0, .5f }); sliderOutlineSpr1->setScaleX({1.1f}); sliderOutlineSpr1->setPosition({-117, 150});      
+        sliderBarSpr1->setAnchorPoint({ 0, .5f }); sliderBarSpr1->setZOrder(-1); sliderBarSpr1->setPosition({-115, 150});
+        sliderOutlineSpr1->setAnchorPoint({ 0, .5f }); sliderOutlineSpr1->setScaleX(1.1f); sliderOutlineSpr1->setPosition({-117, 150});      
         lock1->setZOrder(1);
         unlockText1->setScale(.5f); unlockText1->setPosition({-55.5f, 120});
-        sliderBarSpr2->setAnchorPoint({ 0, .5f }); sliderBarSpr2->setZOrder({-1}); sliderBarSpr2->setPosition({-28.5f, 150}); 
-        sliderOutlineSpr2->setAnchorPoint({ 0, .5f }); sliderOutlineSpr2->setScaleX({1.1f}); sliderOutlineSpr2->setPosition({-30.5f, 150}); 
+        sliderBarSpr2->setAnchorPoint({ 0, .5f }); sliderBarSpr2->setZOrder(-1); sliderBarSpr2->setPosition({-28.5f, 150}); 
+        sliderOutlineSpr2->setAnchorPoint({ 0, .5f }); sliderOutlineSpr2->setScaleX(1.1f); sliderOutlineSpr2->setPosition({-30.5f, 150}); 
         lock2->setZOrder(1);
         unlockText2->setScale(.5f); unlockText2->setPosition({33, 120});
-        sliderBarSpr3->setAnchorPoint({ 0, .5f }); sliderBarSpr3->setZOrder({-1}); sliderBarSpr3->setPosition({61, 150});
-        sliderOutlineSpr3->setAnchorPoint({ 0, .5f }); sliderOutlineSpr3->setScaleX({1.1f}); sliderOutlineSpr3->setPosition({59, 150});
+        sliderBarSpr3->setAnchorPoint({ 0, .5f }); sliderBarSpr3->setZOrder(-1); sliderBarSpr3->setPosition({61, 150});
+        sliderOutlineSpr3->setAnchorPoint({ 0, .5f }); sliderOutlineSpr3->setScaleX(1.1f); sliderOutlineSpr3->setPosition({59, 150});
         lock3->setPosition({17.75f, 18.25f}); lock3->setZOrder(1);
         unlockText3->setScale(.5f); unlockText3->setPosition({122, 120});
-        sliderBarSpr4->setAnchorPoint({ 0, .5f }); sliderBarSpr4->setZOrder({-1}); sliderBarSpr4->setPosition({-28.5f, 85});
-        sliderOutlineSpr4->setAnchorPoint({ 0, .5f }); sliderOutlineSpr4->setScaleX({1.1f}); sliderOutlineSpr4->setPosition({-30.5f, 85});
+        sliderBarSpr4->setAnchorPoint({ 0, .5f }); sliderBarSpr4->setZOrder(-1); sliderBarSpr4->setPosition({-28.5f, 85});
+        sliderOutlineSpr4->setAnchorPoint({ 0, .5f }); sliderOutlineSpr4->setScaleX(1.1f); sliderOutlineSpr4->setPosition({-30.5f, 85});
         lock4->setZOrder(1);
         unlockText4->setScale(.5f); unlockText4->setPosition({33, 55});
 
