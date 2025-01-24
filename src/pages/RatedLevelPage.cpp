@@ -5,7 +5,6 @@
 #include <Geode/utils/web.hpp>
 #include <Geode/loader/Event.hpp>
 
-#include "UnlockProgressionPopup.cpp"
 #include "../modify/ItemInfoPopup.cpp"
 
 using namespace geode::prelude;

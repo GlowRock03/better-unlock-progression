@@ -5,7 +5,6 @@
 #include <Geode/binding/LevelInfoLayer.hpp>
 #include <Geode/binding/GJGameLevel.hpp>
 
-#include "UnlockProgressionPopup.cpp"
 #include "../modify/ItemInfoPopup.cpp"
 
 #include "../classes/ProcessLevelObjects.cpp"

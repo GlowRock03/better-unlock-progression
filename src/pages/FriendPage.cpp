@@ -4,7 +4,6 @@
 #include <Geode/utils/cocos.hpp>
 
 #include "../modify/ItemInfoPopup.cpp"
-
 #include "../classes/ProcessTotalFriends.cpp"
 
 using namespace geode::prelude;

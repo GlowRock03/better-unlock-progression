@@ -3,7 +3,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/utils/cocos.hpp>
 
-#include "UnlockProgressionPopup.cpp"
 #include "../modify/ItemInfoPopup.cpp"
 
 using namespace geode::prelude;
