@@ -33,7 +33,6 @@ private:
         UnlockInfo(int id, IconType type) : iconId(id), unlockType(type), colorType("") {}
     };
 
-    GJEffectManager* effectManager;
     GameManager* gameManager;
 
     FLAlertLayer* popupLayer;
@@ -99,7 +98,6 @@ private:
 public:
     LikesOnYourLevelPage(FLAlertLayer* parentPopup) {
 
-        effectManager = GJEffectManager::create();
         gameManager = GameManager::sharedState();
         popupLayer = parentPopup;
         tierPages = CCArray::create();

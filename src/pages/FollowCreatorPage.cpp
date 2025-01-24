@@ -29,7 +29,6 @@ private:
         UnlockInfo(int id, IconType type) : iconId(id), unlockType(type), colorType("") {}
     };
 
-    GJEffectManager* effectManager;
     GameManager* gameManager;
 
     FLAlertLayer* popupLayer;
@@ -60,7 +59,6 @@ private:
 public:
     FollowCreatorPage(FLAlertLayer* parentPopup) {
 
-        effectManager = GJEffectManager::create();
         gameManager = GameManager::sharedState();
         popupLayer = parentPopup;
         tierPages = CCArray::create();
