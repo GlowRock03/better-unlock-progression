@@ -25,7 +25,6 @@ public:
 
 private:
     void applyCustomizations() {
-        log::info("Applying customizations to ItemInfoPopup.");
 
         auto mainLayer = this->getChildByID("main-layer");
         if (!mainLayer) {
@@ -52,7 +51,6 @@ private:
             // Safely dynamic_cast to SimplePlayer
             auto simplePlayer = dynamic_cast<SimplePlayer*>(child);
             if (simplePlayer) {
-                log::info("Found SimplePlayer instance within GJItemIcon.");
 
                 // Determine whether to use player colors
                 bool togglePlayerColors = Mod::get()->getSettingValue<bool>("toggle-player-colors");

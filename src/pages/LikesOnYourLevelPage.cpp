@@ -215,20 +215,25 @@ private:
         refreshSpr->setScale(.75f);
 
         CCSprite* supportSpr = CCSprite::create("support_me_spr.png"_spr);
+        supportSpr->setScale(0.99f);
+        supportSpr->setRotation(270.f);
 
         CCSprite* supportLikeSpr = CCSprite::createWithSpriteFrameName("GJ_likesIcon_001.png");
-        supportLikeSpr->setPosition({25.5, 32});
+        supportLikeSpr->setPosition({33, 24});
         supportLikeSpr->setScale(0.7f);
+        supportLikeSpr->setRotation(90.f);
         supportSpr->addChild(supportLikeSpr);
 
         auto supportText1 = CCLabelBMFont::create("Support", "bigFont-uhd.fnt");
-        supportText1->setPosition({26, 20});
+        supportText1->setPosition({21, 24});
         supportText1->setScale(0.225f);
+        supportText1->setRotation(90.f);
         supportSpr->addChild(supportText1);
 
         auto supportText2 = CCLabelBMFont::create("Me", "bigFont-uhd.fnt");
-        supportText2->setPosition({25.5f, 12});
+        supportText2->setPosition({14, 23.75f});
         supportText2->setScale(0.225f);
+        supportText2->setRotation(90.f);
         supportSpr->addChild(supportText2);
 
         auto refreshButton = CCMenuItemSpriteExtra::create(
@@ -245,7 +250,7 @@ private:
             menu_selector(LikesOnYourLevelPage::supportMe)
         );
         supportButton->setAnchorPoint({.5f, .5f});
-        supportButton->setPosition({220, 245});
+        supportButton->setPosition({220, 244.25f});
 
         buttonMenu->addChild(refreshButton);
         buttonMenu->addChild(supportButton);
@@ -253,19 +258,13 @@ private:
 
     void supportMe(CCObject*) {
 
-        log::info("entered");
-        GameLevelManager::sharedState()->downloadLevel(59626284, false);
-        log::info("downloaded");
-        auto level = GameLevelManager::sharedState()->getSavedLevel(59626284);
-        log::info("level made");
+        GameLevelManager::sharedState()->downloadLevel(114471227, false);       //114471227 is my level
+        auto level = GameLevelManager::sharedState()->getSavedLevel(114471227);
         auto levelLayer = LevelInfoLayer::create(level, false);
-        log::info("popup made");
 
         auto scene = CCScene::create();
         scene->addChild(levelLayer);
         CCDirector::sharedDirector()->pushScene(CCTransitionFade::create(0.5, scene));
-        //popupLayer->addChild(levelLayer);
-        log::info("finished");
     }
 
     void refreshMaxLikes(CCObject* sender) {

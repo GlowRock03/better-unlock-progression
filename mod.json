@@ -10,7 +10,8 @@
 	"name": "Better Unlock Progression",
 	"version": "v1.0.0",
 	"developer": "GlowRock",
-	"description": "",
+	"description": "Progression Menu for Unlockables!",
+    "tags": ["enhancement", "interface"],
 	"settings": {
         "toggle-player-colors": {
             "name": "Toggle Player Colours",
@@ -145,12 +146,22 @@
             "default": true
         }
 	},
-	"resources": {
+    "resources": {
 		"sprites": [
 			"resources/*.png"
 		],
         "files": [
             "resources/levels_data.json"
         ]
-    }
+    },
+    "links": {
+        "source": "https://github.com/GlowRock03/better-unlock-progression",
+        "community": "https://discord.gg/4GQGcdZhff"
+    },
+    "dependencies": [
+        {
+            "id": "geode.node-ids",
+            "version": ">=v1.19.0"
+        }
+    ]
 }
