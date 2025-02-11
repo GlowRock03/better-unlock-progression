@@ -326,19 +326,19 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
 void UnlockProgressionPopup::createBackgroundUI() {
 
-    auto titleSpr = CCSprite::create("better_unlock_progression_title_spr.png"_spr);
+    auto titleSpr = CCSprite::createWithSpriteFrameName("betterUnlockProgressionTitle.png"_spr);
     titleSpr->setPosition({75, 25});
     titleSpr->setScale(.4f);
     m_buttonMenu->addChild(titleSpr);
     
-    auto creatorTitleSpr = CCSprite::create("creator_title_spr.png"_spr);
-    creatorTitleSpr->setScale(.4f);
+    auto creatorTitle = CCLabelBMFont::create("By GlowRock", "goldFont-uhd.fnt");
+    creatorTitle->setScale(.4f);
     auto creatorTitleButton = CCMenuItemSpriteExtra::create(
-        creatorTitleSpr,
+        creatorTitle,
         this,
         menu_selector(UnlockProgressionPopup::openProfile)
     );
-    creatorTitleButton->setPosition({373, 12});
+    creatorTitleButton->setPosition({373, 13});
     m_buttonMenu->addChild(creatorTitleButton);
 
     auto topLeftCornerSpr = CCSprite::createWithSpriteFrameName("dailyLevelCorner_001.png");

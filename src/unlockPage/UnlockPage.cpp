@@ -16,7 +16,7 @@ CCNode* UnlockPage::createPage(int value) {
 
     //auto labelName = fmt::format("glowrock.better_unlock_progression/{}", iconSprName);         //was having issues with _spr and a variable, so a manual solution works
     //auto labelSpr = CCSprite::create(labelName.c_str());
-    auto labelSpr = CCSprite::create(iconSprName);
+    auto labelSpr = CCSprite::createWithSpriteFrameName(iconSprName);
     labelSpr->setPosition({227.5f, 185});
     labelSpr->setScale(0.65f);
     pageContainer->addChild(labelSpr);

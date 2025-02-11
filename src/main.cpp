@@ -14,7 +14,7 @@ class $modify(MyGJGarageLayer, GJGarageLayer) {
 		}
 
         auto myButton = CCMenuItemSpriteExtra::create(
-			CCSprite::create("mod_button.png"_spr),
+			CCSprite::createWithSpriteFrameName("modButton.png"_spr),
 			this,
 			menu_selector(MyGJGarageLayer::onMyButton)
 		);

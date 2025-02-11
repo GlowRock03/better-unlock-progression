@@ -763,7 +763,7 @@ float Utilities::calculateYPosition(std::string type, int unlockNumOnPage, int p
 
 bool Utilities::placeUnlockable(CCObject* object, int value, CCLabelBMFont* currentProgressText, bool progressPlaced, CCNode* tierContainer, CCMenu* tierMenu, UnlockData* previousUnlockData, UnlockData* currentUnlockData, UnlockData* endOfPreviousTier, UnlockData* endOfTier) {
 
-    auto sliderOutlineSpr = CCSprite::create("Progress_Outline.png"_spr);
+    auto sliderOutlineSpr = CCSprite::createWithSpriteFrameName("progressOutline.png"_spr);
     auto sliderBarSpr = togglePlayerColours ? CCSprite::create("sliderBar2-uhd.png") : CCSprite::create("sliderBar-uhd.png");
     float ratio = (float)(value - std::stoi(previousUnlockData->numberString)) / (float)(std::stoi(currentUnlockData->numberString) - std::stoi(previousUnlockData->numberString));
     float scale = ratio >= 0.98f ? sliderBarSpr->getContentSize().width * 0.98f : sliderBarSpr->getContentSize().width * ratio;
