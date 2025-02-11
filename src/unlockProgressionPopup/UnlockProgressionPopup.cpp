@@ -289,11 +289,10 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
         completedListsPageContainer->setVisible(false);
     }
 
-    /*
     if (showMostLikedPage) {
 
-        LikesOnYourLevelPage* likesOnYourLevelPage = new LikesOnYourLevelPage(this);
-        CCNode* likesOnYourLevelPageContainer = likesOnYourLevelPage->createPage();
+        UnlockPage* likesOnYourLevelPage = new UnlockPage(this, util->likesOnYourLevelUnlockDataList, "most_liked_spr.png"_spr);
+        CCNode* likesOnYourLevelPageContainer = likesOnYourLevelPage->createPage(0);
         likesOnYourLevelPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(likesOnYourLevelPageContainer);
         m_pages->addObject(likesOnYourLevelPageContainer);
@@ -302,14 +301,13 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
     if (showRatedLevelPage) {
 
-        RatedLevelPage* ratedLevelPage = new RatedLevelPage(this);
-        CCNode* ratedLevelPageContainer = ratedLevelPage->createPage();
+        UnlockPage* ratedLevelPage = new UnlockPage(this, util->creatorPointsUnlockDataList, "creator_points_spr.png"_spr);
+        CCNode* ratedLevelPageContainer = ratedLevelPage->createPage(0);
         ratedLevelPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(ratedLevelPageContainer);
         m_pages->addObject(ratedLevelPageContainer);
         ratedLevelPageContainer->setVisible(false);
     }
-    */
 
     if (! disableArrows) {
 

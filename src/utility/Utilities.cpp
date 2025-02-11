@@ -754,7 +754,7 @@ float Utilities::calculateYPosition(std::string type, int unlockNumOnPage, int p
         if (pageSize != 1) {
             position = isSecondRow ? -75 : -10;
         } else {
-            position = 92.5f;
+            position = -37.5f;
         }
     }
 
