@@ -181,16 +181,16 @@ void UnlockPage::makeInfoPopup(std::string type) {
 
         FLAlertLayer::create(
             "Refresh Complete",
-            std::format("Your '{}' statistic has been fetched via <cl>web requests</c>. <cr>DO NOT SPAM THIS BUTTON!</c> That will result in an <cr>API Rate Limit</c>.", type),
+            fmt::format("Your '{}' statistic has been fetched via <cl>web requests</c>. <cr>DO NOT SPAM THIS BUTTON!</c> That will result in an <cr>API Rate Limit</c>.", type),
             "Ok"
-        )->show(); 
+        )->show();
     } else {
 
         FLAlertLayer::create(
             "Refreshing",
             "<co>If this is the first time you pressed this button</c>, <cy>press this button again</c>. Then your 'Friends' will be refreshed.",
             "Ok"
-        )->show(); 
+        )->show();
     }
 }
 
