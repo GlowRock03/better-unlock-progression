@@ -22,7 +22,9 @@ public:
     }
 
     int processFriendCount() {
-
+ 
+        FriendsProfilePage* m_friendsPage = FriendsProfilePage::create(UserListType::Friends);
+        
         int friendCount = -1;
 
         for (auto node : CCArrayExt<CCNode*>(m_friendsPage->m_mainLayer->getChildren())) {

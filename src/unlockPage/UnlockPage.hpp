@@ -21,6 +21,13 @@ public:
     
     CCNode* createPage(int value) override;
     CCNode* createTier(int tier, int value) override;
+    void createRefreshButton();
+    void refreshFriends(CCObject* sender);
+    void refreshMaxLikes(CCObject* sender);
+    void refreshCreatorPoints(CCObject* sender);
+    void makeInfoPopup(std::string type);
+    int processFriendCount();
+
 };
 
 #endif

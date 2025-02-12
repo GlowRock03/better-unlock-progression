@@ -175,16 +175,16 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
         m_pages->addObject(destroyedPlayersPageContainer);
         destroyedPlayersPageContainer->setVisible(false);
     }
-    /*
+
     if (showFriendPage) {
 
-        friendsPage = new FriendPage(this);
+        UnlockPage* friendsPage = new UnlockPage(this, util->followCreatorsUnlockDataList, "friends_spr.png"_spr);
         CCNode* friendsPageContainer = friendsPage->createPage(m_playerStats.friends);
         friendsPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(friendsPageContainer);
         m_pages->addObject(friendsPageContainer);
         friendsPageContainer->setVisible(false);
-    } */
+    }
 
     if (showFollowCreatorPage) {
 
@@ -216,7 +216,6 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
         m_pages->addObject(rateStarsOfLevelsPageContainer);
         rateStarsOfLevelsPageContainer->setVisible(false);
     }
-
 
     if (showInsanePage) {
 

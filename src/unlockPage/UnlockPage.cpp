@@ -14,8 +14,6 @@ CCNode* UnlockPage::createPage(int value) {
     buttonMenu->setPosition({147, -200});
     pageContainer->addChild(buttonMenu);
 
-    //auto labelName = fmt::format("glowrock.better_unlock_progression/{}", iconSprName);         //was having issues with _spr and a variable, so a manual solution works
-    //auto labelSpr = CCSprite::create(labelName.c_str());
     auto labelSpr = CCSprite::createWithSpriteFrameName(iconSprName);
     labelSpr->setPosition({227.5f, 185});
     labelSpr->setScale(0.65f);
@@ -31,6 +29,12 @@ CCNode* UnlockPage::createPage(int value) {
     player->setScale(1.35f);
     pageContainer->addChild(player);
 
+    //add speical refreshes for friend page, most liked level, and creator points
+    if (std::string(iconSprName).compare("friends_spr.png"_spr) == 0 || std::string(iconSprName).compare("most_liked_spr.png"_spr) == 0 || std::string(iconSprName).compare("creator_points_spr.png"_spr) == 0) {
+
+        createRefreshButton();
+    }
+
     for (int i = 0; i < tierCount; ++i) {
         auto tierPage = createTier(i, value);
         tierPage->retain();
@@ -44,6 +48,41 @@ CCNode* UnlockPage::createPage(int value) {
     pageContainer->setPosition({pageWidth, 0});
 
     return pageContainer;
+}
+
+void UnlockPage::createRefreshButton() {
+
+    CCSprite* refreshSpr = CCSprite::createWithSpriteFrameName("GJ_replayBtn_001.png");
+    refreshSpr->setScale(.75f);
+
+    CCMenuItemSpriteExtra* refreshButton = nullptr;
+    if (std::string(iconSprName).compare("friends_spr.png"_spr) == 0) {
+
+        refreshButton = CCMenuItemSpriteExtra::create(
+            refreshSpr,
+            this,
+            menu_selector(UnlockPage::refreshFriends)
+        );
+    } else if (std::string(iconSprName).compare("most_liked_spr.png"_spr) == 0) {
+
+        refreshButton = CCMenuItemSpriteExtra::create(
+            refreshSpr,
+            this,
+            menu_selector(UnlockPage::refreshMaxLikes)
+        );
+    } else {
+
+        refreshButton = CCMenuItemSpriteExtra::create(
+            refreshSpr,
+            this,
+            menu_selector(UnlockPage::refreshCreatorPoints)
+        );
+    }
+
+    refreshButton->setAnchorPoint({.5f, .5f});
+    refreshButton->setPosition({270, 245});
+
+    buttonMenu->addChild(refreshButton);
 }
 
 CCNode* UnlockPage::createTier(int tier, int value) {
@@ -116,4 +155,71 @@ CCNode* UnlockPage::createTier(int tier, int value) {
 
     tierContainer->setPosition({pageWidth, 0});
     return tierContainer;
+}
+
+void UnlockPage::refreshFriends(CCObject* sender) {
+
+    int num = processFriendCount();
+    num = processFriendCount();
+    log::info("result: {}", num);
+    makeInfoPopup("Friends");
+}
+
+void UnlockPage::refreshMaxLikes(CCObject* sender) {
+
+    makeInfoPopup("Your Most Liked Level");
+}
+
+void UnlockPage::refreshCreatorPoints(CCObject* sender) {
+
+    makeInfoPopup("Creator Points");
+}
+
+void UnlockPage::makeInfoPopup(std::string type) {
+
+    if (type.compare("Friends") != 0) {
+
+        FLAlertLayer::create(
+            "Refresh Complete",
+            std::format("Your '{}' statistic has been fetched via <cl>web requests</c>. <cr>DO NOT SPAM THIS BUTTON!</c> That will result in an <cr>API Rate Limit</c>.", type),
+            "Ok"
+        )->show(); 
+    } else {
+
+        FLAlertLayer::create(
+            "Refreshing",
+            "<co>If this is the first time you pressed this button</c>, <cy>press this button again</c>. Then your 'Friends' will be refreshed.",
+            "Ok"
+        )->show(); 
+    }
+}
+
+int UnlockPage::processFriendCount() {
+
+    FriendsProfilePage* m_friendsPage = FriendsProfilePage::create(UserListType::Friends);
+            
+    int friendCount = -1;
+
+    for (auto node : CCArrayExt<CCNode*>(m_friendsPage->m_mainLayer->getChildren())) {
+
+        if (auto label = typeinfo_cast<CCLabelBMFont*>(node)) {                
+
+            std::string nodeText = label->getString();             
+            if (nodeText.find("Total friends:") != std::string::npos) {
+
+                std::string number = nodeText.substr(
+                    nodeText.find(":") + 2, 
+                    nodeText.length() - nodeText.find(":") - 2
+                );
+                friendCount = std::atoi(number.c_str());
+                break;
+            }
+        }
+    }
+
+    m_friendsPage->removeFromParentAndCleanup(true);
+    m_friendsPage->release();
+    m_friendsPage = nullptr;
+
+    return friendCount;
 }
