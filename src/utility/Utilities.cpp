@@ -875,3 +875,16 @@ bool Utilities::placeUnlockable(CCObject* object, int value, CCLabelBMFont* curr
 
     return progressPlaced;
 }
+
+std::vector<std::string> Utilities::split(const std::string& str, const std::string& delimiter) {
+
+    log::info("Splitting string: '{}' with delimiter: '{}'", str, delimiter);
+    std::vector<std::string> tokens;
+    size_t start = 0, end;
+    while ((end = str.find(delimiter, start)) != std::string::npos) {
+        tokens.push_back(str.substr(start, end - start));
+        start = end + delimiter.length();
+    }
+    tokens.push_back(str.substr(start));
+    return tokens;
+}

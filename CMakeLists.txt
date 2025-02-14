@@ -15,6 +15,8 @@ add_library(${PROJECT_NAME} SHARED
     src/basePage/BasePage.cpp
     src/unlockPage/UnlockPage.cpp
 
+    src/utility/MyLevelDownloadDelegate.cpp
+
     src/modify/MyItemInfoPopup.cpp
 )
 

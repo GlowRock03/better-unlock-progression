@@ -89,6 +89,7 @@ public:
                         UnlockData* previousUnlockData, UnlockData* currentUnlockData, 
                         UnlockData* endOfPreviousTier, UnlockData* endOfTier);
 
+    std::vector<std::string> split(const std::string& str, const std::string& delimiter);
 };
 
 #endif

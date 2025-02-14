@@ -4,6 +4,8 @@ UnlockPage::UnlockPage(FLAlertLayer* parentPopup, std::vector<Utilities::UnlockD
     
     unlockCount = (int)unlockList.size() - 1;
     tierCount = (unlockCount + 9) / 10;
+    userId = util->gameManager->m_playerUserID;
+    accountId = GJAccountManager::sharedState()->m_accountID;
 }
 
 UnlockPage::~UnlockPage() {}
@@ -48,41 +50,6 @@ CCNode* UnlockPage::createPage(int value) {
     pageContainer->setPosition({pageWidth, 0});
 
     return pageContainer;
-}
-
-void UnlockPage::createRefreshButton() {
-
-    CCSprite* refreshSpr = CCSprite::createWithSpriteFrameName("GJ_replayBtn_001.png");
-    refreshSpr->setScale(.75f);
-
-    CCMenuItemSpriteExtra* refreshButton = nullptr;
-    if (std::string(iconSprName).compare("friends_spr.png"_spr) == 0) {
-
-        refreshButton = CCMenuItemSpriteExtra::create(
-            refreshSpr,
-            this,
-            menu_selector(UnlockPage::refreshFriends)
-        );
-    } else if (std::string(iconSprName).compare("most_liked_spr.png"_spr) == 0) {
-
-        refreshButton = CCMenuItemSpriteExtra::create(
-            refreshSpr,
-            this,
-            menu_selector(UnlockPage::refreshMaxLikes)
-        );
-    } else {
-
-        refreshButton = CCMenuItemSpriteExtra::create(
-            refreshSpr,
-            this,
-            menu_selector(UnlockPage::refreshCreatorPoints)
-        );
-    }
-
-    refreshButton->setAnchorPoint({.5f, .5f});
-    refreshButton->setPosition({270, 245});
-
-    buttonMenu->addChild(refreshButton);
 }
 
 CCNode* UnlockPage::createTier(int tier, int value) {
@@ -157,6 +124,109 @@ CCNode* UnlockPage::createTier(int tier, int value) {
     return tierContainer;
 }
 
+
+void UnlockPage::createRefreshButton() {
+
+    CCSprite* refreshSpr = CCSprite::createWithSpriteFrameName("GJ_replayBtn_001.png");
+    refreshSpr->setScale(.75f);
+
+    CCMenuItemSpriteExtra* refreshButton;
+    CCMenuItemSpriteExtra* supportMeButton;
+    if (std::string(iconSprName).compare("friends_spr.png"_spr) == 0) {
+
+        refreshButton = CCMenuItemSpriteExtra::create(
+            refreshSpr,
+            this,
+            menu_selector(UnlockPage::refreshFriends)
+        );
+    } else if (std::string(iconSprName).compare("most_liked_spr.png"_spr) == 0) {
+
+        CCSprite* supportSpr = CCSprite::create("support_me_spr.png"_spr);
+        supportSpr->setScale(0.99f);
+        supportSpr->setRotation(270.f);
+
+        CCSprite* supportLikeSpr = CCSprite::createWithSpriteFrameName("GJ_likesIcon_001.png");
+        supportLikeSpr->setPosition({33, 24});
+        supportLikeSpr->setScale(0.7f);
+        supportLikeSpr->setRotation(90.f);
+        supportSpr->addChild(supportLikeSpr);
+
+        auto supportText1 = CCLabelBMFont::create("Support", "bigFont-uhd.fnt");
+        supportText1->setPosition({21, 24});
+        supportText1->setScale(0.225f);
+        supportText1->setRotation(90.f);
+        supportSpr->addChild(supportText1);
+
+        auto supportText2 = CCLabelBMFont::create("Me", "bigFont-uhd.fnt");
+        supportText2->setPosition({14, 23.75f});
+        supportText2->setScale(0.225f);
+        supportText2->setRotation(90.f);
+        supportSpr->addChild(supportText2);
+
+        refreshButton = CCMenuItemSpriteExtra::create(
+            refreshSpr,
+            this,
+            menu_selector(UnlockPage::refreshMaxLikes)
+        );
+        supportMeButton = CCMenuItemSpriteExtra::create(
+            supportSpr,
+            this,
+            menu_selector(UnlockPage::openSupportMeLevel)
+        );
+
+        supportMeButton->setAnchorPoint({.5f, .5f});
+        supportMeButton->setPosition({220, 245});
+        buttonMenu->addChild(supportMeButton);
+    } else {
+
+        refreshButton = CCMenuItemSpriteExtra::create(
+            refreshSpr,
+            this,
+            menu_selector(UnlockPage::refreshCreatorPoints)
+        );
+    }
+
+    refreshButton->setAnchorPoint({.5f, .5f});
+    refreshButton->setPosition({270, 245});
+
+    buttonMenu->addChild(refreshButton);
+}
+
+void UnlockPage::openSupportMeLevel(CCObject* sender) {
+
+    int id = 114471227;
+
+    GameLevelManager::sharedState()->downloadLevel(id, false);
+
+    GameLevelManager::get()->m_levelDownloadDelegate = MyLevelDownloadDelegate::get();
+
+    //auto scheduler = CCDirector::sharedDirector()->getScheduler();
+    //scheduler->scheduleSelector(schedule_selector(UnlockPage::checkLevelDownloaded), this, 0.2f, false);
+}
+
+void UnlockPage::checkLevelDownloaded(float dt) {
+
+    auto level = GameLevelManager::sharedState()->getSavedLevel(114471227);
+    if (level) {
+
+        log::info("level is not null");
+        bool downloadedRight = GameLevelManager::sharedState()->hasDownloadedLevel(114471227);
+        log::info("Result: {}", downloadedRight);
+
+        auto scheduler = CCDirector::sharedDirector()->getScheduler();
+        scheduler->unscheduleSelector(schedule_selector(UnlockPage::checkLevelDownloaded), this);
+        openLevel(level);
+    }
+}
+
+void UnlockPage::openLevel(GJGameLevel* level) {
+
+    auto levelLayer = LevelInfoLayer::create(level, false);
+    auto scene = CCScene::create();
+    scene->addChild(levelLayer);
+    CCDirector::sharedDirector()->pushScene(CCTransitionFade::create(0.5, scene));
+}
+
 void UnlockPage::refreshFriends(CCObject* sender) {
 
     int num = processFriendCount();
@@ -167,11 +237,13 @@ void UnlockPage::refreshFriends(CCObject* sender) {
 
 void UnlockPage::refreshMaxLikes(CCObject* sender) {
 
+    requestMostLiked(0);
     makeInfoPopup("Your Most Liked Level");
 }
 
 void UnlockPage::refreshCreatorPoints(CCObject* sender) {
 
+    requestCreatorPoints();
     makeInfoPopup("Creator Points");
 }
 
@@ -193,6 +265,7 @@ void UnlockPage::makeInfoPopup(std::string type) {
         )->show();
     }
 }
+
 
 int UnlockPage::processFriendCount() {
 
@@ -222,4 +295,159 @@ int UnlockPage::processFriendCount() {
     m_friendsPage = nullptr;
 
     return friendCount;
+}
+
+
+void UnlockPage::requestMostLiked(int page) {
+
+    log::info("Entered web request method");
+
+    // Send initial request to get total levels from server
+
+    mostLikedListener.bind([this, page](web::WebTask::Event* e) mutable {
+
+        if (web::WebResponse* value = e->getValue()) {
+            auto str = value->string().unwrap();
+            log::info("Response for Page {}: {}", page, str);
+
+            if (str == "-1") {
+                log::warn("No levels found!");
+                return;
+            }
+
+            // Parse response
+            auto [levels, total, offset, amount] = parseResponse(str);
+
+            log::info("Parsed Levels: {}", fmt::join(levels, ", "));
+            log::info("Total: {}, Offset: {}, Amount: {}", total, offset, amount);
+
+            processLevels(levels, userId);
+
+            // Continue fetching pages if needed
+            if (offset + amount < total) {
+
+                log::info("Fetching next page... current size of vector is: {}", allLikes.size());
+                requestMostLiked(page + 1);
+            } else {
+                log::info("All levels fetched: {}", allLikes.size());
+                log::info("All likes: {}", fmt::join(allLikes, ", "));
+
+                int maxLikes = findMaxLikes();
+                log::info("The level with the most likes has {} likes.", maxLikes);
+                
+                Mod::get()->setSavedValue<int>(fmt::format("most-liked-{}", userId), maxLikes);
+
+                //updateProgression(maxLikes);
+
+            }
+
+        } else if (e->getProgress()) {
+            log::info("Fetching page {} in progress...", page);
+
+        } else if (e->isCancelled()) {
+            log::warn("Request for page {} was cancelled.", page);
+        }
+    });
+
+    // Send request for the given page
+    auto req = web::WebRequest().userAgent("").bodyString(fmt::format("secret=Wmfd2893gb7&type=5&page={}&str={}", page, userId));
+    auto task = req.post("http://www.boomlings.com/database/getGJLevels21.php");
+    mostLikedListener.setFilter(task);
+}
+
+void UnlockPage::processLevels(const std::vector<std::string>& levelObjects, int userId) {
+
+    std::vector<std::tuple<int, int>> levels;
+
+    for (const auto& levelObject : levelObjects) {
+        auto keyValuePairs = util->split(levelObject, ":");
+        int levelId = 0;
+        int likes = 0;
+
+        // Iterate through the key-value pairs
+        for (size_t i = 0; i < keyValuePairs.size(); i += 2) {
+            if (i + 1 < keyValuePairs.size()) {
+                int key = std::stoi(keyValuePairs[i]);
+                if (key == 14) {
+                    likes = std::stoi(keyValuePairs[i + 1]); // Key 14: Likes
+                    break;
+                }
+            }
+        }
+        allLikes.push_back(likes);
+    }
+}
+
+std::tuple<std::vector<std::string>, int, int, int> UnlockPage::parseResponse(const std::string& response) {
+    // Split the response into parts
+    auto parts = util->split(response, "#");
+
+    // Extract levels
+    auto levels = util->split(parts[0], "|");
+
+    // Extract page info
+    auto pageInfo = util->split(parts[3], ":");
+
+    int total = std::stoi(pageInfo[0]);
+    int offset = std::stoi(pageInfo[1]);
+    int amount = std::stoi(pageInfo[2]);
+
+    return {levels, total, offset, amount};
+}
+
+int UnlockPage::findMaxLikes() {
+
+    return *max_element(allLikes.begin(), allLikes.end());
+}
+
+
+void UnlockPage::requestCreatorPoints() {
+
+    creatorPointsListener.bind([this](web::WebTask::Event* e) {
+
+        if (web::WebResponse* value = e->getValue()) {
+            auto str = value->string().unwrap();        //I totally check this value before unwrapping :)
+            log::info("Response: {}", str);
+
+            int creatorPoints = findCreatorPoints(str);
+            log::info("Extracted Creator Points: {}", creatorPoints);
+
+            Mod::get()->setSavedValue<int>(fmt::format("creator-points-{}", accountId), creatorPoints);
+
+            //updateProgression(creatorPoints);
+
+        } else if (web::WebProgress* progress = e->getProgress()) {
+            log::info("{}", "progress");
+        } else if (e->isCancelled()) {
+            log::info("{}", "fail");
+
+            //call ui update
+        }
+    });
+
+    auto req = web::WebRequest().userAgent("").bodyString(fmt::format("secret=Wmfd2893gb7&targetAccountID={}", accountId));
+    auto task = req.post("http://www.boomlings.com/database/getGJUserInfo20.php");
+    creatorPointsListener.setFilter(task);
+}
+
+int UnlockPage::findCreatorPoints(const std::string& fullResponse) {
+
+    int creatorPoints = 0;
+    auto keyValuePairs = util->split(fullResponse, ":");
+
+    try {
+        for (size_t i = 0; i < keyValuePairs.size(); i += 2) {
+            if (i + 1 < keyValuePairs.size()) {
+                int key = std::stoi(keyValuePairs[i]);
+                if (key == 8) {
+                    creatorPoints = std::stoi(keyValuePairs[i + 1]);
+                    break;
+                }
+            }
+        }
+    } catch (const std::exception& e) {
+        log::info("Error processing creator points: {}. Exception: {}", fullResponse, e.what());
+    }
+
+    return creatorPoints;
 }
