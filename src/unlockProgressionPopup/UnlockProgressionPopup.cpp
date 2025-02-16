@@ -5,6 +5,7 @@ UnlockProgressionPopup* UnlockProgressionPopup::create(std::string const& text) 
     auto winSize = CCDirector::sharedDirector()->getWinSize();
 
     auto ret = new UnlockProgressionPopup();
+    ret->setID("Popup-Layer");
     if (ret->initAnchored(466.58f, 256, text)) {
         ret->autorelease();
         return ret;
@@ -29,8 +30,10 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
     m_pageWidth = 466.58f;
 
     m_pageContainer = CCNode::create();
+    m_pageContainer->setID("Progression-Container");
     m_pageContainer->setPosition({0, 0});
     m_buttonMenu->addChild(m_pageContainer);
+    m_buttonMenu->setID("Mod Container");
 
     m_pages = CCArray::create();
     m_pages->retain();
@@ -98,6 +101,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
         
         UnlockPage* starPage = new UnlockPage(this, util->starUnlockDataList, "stars_spr.png"_spr);
         CCNode* starPageContainer = starPage->createPage(util->m_playerStats.stars);
+        starPageContainer->setID("Stars-Progression");
         starPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(starPageContainer);
         m_pages->addObject(starPageContainer);
@@ -108,6 +112,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* moonPage = new UnlockPage(this, util->moonUnlockDataList, "moons_spr.png"_spr);
         CCNode* moonPageContainer = moonPage->createPage(util->m_playerStats.moons);
+        moonPageContainer->setID("Moons-Progression");
         moonPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(moonPageContainer);
         m_pages->addObject(moonPageContainer);
@@ -119,6 +124,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* secretCoinsPage = new UnlockPage(this, util->secretCoinUnlockDataList, "secret_coins_spr.png"_spr);
         CCNode* secretCoinsPageContainer = secretCoinsPage->createPage(util->m_playerStats.secretCoins);
+        secretCoinsPageContainer->setID("Secret-Coin-Progression");
         secretCoinsPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(secretCoinsPageContainer);
         m_pages->addObject(secretCoinsPageContainer);
@@ -129,6 +135,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* userCoinsPage = new UnlockPage(this, util->userCoinUnlockDataList, "user_coins_spr.png"_spr);
         CCNode* userCoinsPageContainer = userCoinsPage->createPage(util->m_playerStats.userCoins);
+        userCoinsPageContainer->setID("User-Coin-Progression");
         userCoinsPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(userCoinsPageContainer);
         m_pages->addObject(userCoinsPageContainer);
@@ -140,6 +147,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* diamondsPage = new UnlockPage(this, util->diamondUnlockDataList, "diamonds_spr.png"_spr);
         CCNode* diamondsPageContainer = diamondsPage->createPage(util->m_playerStats.diamonds);
+        diamondsPageContainer->setID("Diamond-Progression");
         diamondsPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(diamondsPageContainer);
         m_pages->addObject(diamondsPageContainer);
@@ -150,6 +158,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* jumpPage = new UnlockPage(this, util->jumpsUnlockDataList, "jumps_spr.png"_spr);
         CCNode* jumpPageContainer = jumpPage->createPage(util->m_playerStats.jumps);
+        jumpPageContainer->setID("Jump-Progression");
         jumpPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(jumpPageContainer);
         m_pages->addObject(jumpPageContainer);
@@ -160,6 +169,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* attemptPage = new UnlockPage(this, util->attemptsUnlockDataList, "attempts_spr.png"_spr);
         CCNode* attemptPageContainer = attemptPage->createPage(util->m_playerStats.attempts);
+        attemptPageContainer->setID("Attempt-Progression");
         attemptPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(attemptPageContainer);
         m_pages->addObject(attemptPageContainer);
@@ -170,6 +180,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* destroyedPlayersPage = new UnlockPage(this, util->destroyedPlayersUnlockDataList, "destroyed_players_spr.png"_spr);
         CCNode* destroyedPlayersPageContainer = destroyedPlayersPage->createPage(util->m_playerStats.destoryedPlayers);
+        destroyedPlayersPageContainer->setID("Destroyed-Players-Progression");
         destroyedPlayersPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(destroyedPlayersPageContainer);
         m_pages->addObject(destroyedPlayersPageContainer);
@@ -180,6 +191,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* friendsPage = new UnlockPage(this, util->friendsUnlockDataList, "friends_spr.png"_spr);
         CCNode* friendsPageContainer = friendsPage->createPage(util->m_playerStats.friends);
+        friendsPageContainer->setID("Friend-Progression");
         friendsPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(friendsPageContainer);
         m_pages->addObject(friendsPageContainer);
@@ -190,6 +202,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* followCreatorsPage = new UnlockPage(this, util->followCreatorsUnlockDataList, "follow_creators_spr.png"_spr);
         CCNode* followCreatorsPageContainer = followCreatorsPage->createPage(util->m_playerStats.followedCreators);
+        followCreatorsPageContainer->setID("Followed-Creators-Progression");
         followCreatorsPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(followCreatorsPageContainer);
         m_pages->addObject(followCreatorsPageContainer);
@@ -201,6 +214,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* likeDislikeLevelsPage = new UnlockPage(this, util->likeDislikeUnlockDataList, "like_dislike_spr.png"_spr);
         CCNode* likeDislikeLevelsPageContainer = likeDislikeLevelsPage->createPage(util->m_playerStats.likesAndDislikes);
+        likeDislikeLevelsPageContainer->setID("Like-Dislike-Progression");
         likeDislikeLevelsPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(likeDislikeLevelsPageContainer);
         m_pages->addObject(likeDislikeLevelsPageContainer);
@@ -211,6 +225,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* rateStarsOfLevelsPage = new UnlockPage(this, util->rateStarsUnlockDataList, "rate_stars_spr.png"_spr);
         CCNode* rateStarsOfLevelsPageContainer = rateStarsOfLevelsPage->createPage(util->m_playerStats.rateStarsOnLevels);
+        rateStarsOfLevelsPageContainer->setID("Rate-Stars-Progression");
         rateStarsOfLevelsPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(rateStarsOfLevelsPageContainer);
         m_pages->addObject(rateStarsOfLevelsPageContainer);
@@ -221,6 +236,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* insaneLevelsPage = new UnlockPage(this, util->completedInsaneUnlockDataList, "completed_insanes_spr.png"_spr);
         CCNode* insaneLevelsPageContainer = insaneLevelsPage->createPage(util->m_playerStats.completedInsanes);
+        insaneLevelsPageContainer->setID("Completed-Insanes-Progression");
         insaneLevelsPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(insaneLevelsPageContainer);
         m_pages->addObject(insaneLevelsPageContainer);
@@ -231,6 +247,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* demonLevelsPage = new UnlockPage(this, util->completedDemonUnlockDataList, "completed_demons_spr.png"_spr);
         CCNode* demonLevelsPageContainer = demonLevelsPage->createPage(util->m_playerStats.completedDemons);
+        demonLevelsPageContainer->setID("Completed-Demons-Progression");
         demonLevelsPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(demonLevelsPageContainer);
         m_pages->addObject(demonLevelsPageContainer);
@@ -241,6 +258,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* completedOnlineLevelsPage = new UnlockPage(this, util->completedOnlineUnlockDataList, "completed_online_spr.png"_spr);
         CCNode* completedOnlineLevelsPageContainer = completedOnlineLevelsPage->createPage(util->m_playerStats.completedOnline);
+        completedOnlineLevelsPageContainer->setID("Completed-Online-Progression");
         completedOnlineLevelsPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(completedOnlineLevelsPageContainer);
         m_pages->addObject(completedOnlineLevelsPageContainer);
@@ -251,6 +269,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* completedDailyLevelsPage = new UnlockPage(this, util->completedDailyUnlockDataList, "completed_daily_spr.png"_spr);
         CCNode* completedDailyLevelsPageContainer = completedDailyLevelsPage->createPage(util->m_playerStats.completedDaily);
+        completedDailyLevelsPageContainer->setID("Completed-Daily-Progression");
         completedDailyLevelsPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(completedDailyLevelsPageContainer);
         m_pages->addObject(completedDailyLevelsPageContainer);
@@ -262,6 +281,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* completedMapPacksPage = new UnlockPage(this, util->completedMapPacksUnlockDataList, "completed_map_packs_spr.png"_spr);
         CCNode* completedMapPacksPageContainer = completedMapPacksPage->createPage(util->m_playerStats.completedMapPacks);
+        completedMapPacksPageContainer->setID("Completed-Map-Packs-Progression");
         completedMapPacksPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(completedMapPacksPageContainer);
         m_pages->addObject(completedMapPacksPageContainer);
@@ -272,6 +292,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* completedGauntletsPage = new UnlockPage(this, util->completedGauntletsUnlockDataList, "completed_gauntlets_spr.png"_spr);
         CCNode* completedGauntletsPageContainer = completedGauntletsPage->createPage(util->m_playerStats.completedGauntlets);
+        completedGauntletsPageContainer->setID("Completed-Gauntlets-Progression");
         completedGauntletsPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(completedGauntletsPageContainer);
         m_pages->addObject(completedGauntletsPageContainer);
@@ -282,6 +303,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* completedListsPage = new UnlockPage(this, util->completedListsUnlockDataList, "completed_lists_spr.png"_spr);
         CCNode* completedListsPageContainer = completedListsPage->createPage(util->m_playerStats.completedLists);
+        completedListsPageContainer->setID("Completed-Lists-Progression");
         completedListsPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(completedListsPageContainer);
         m_pages->addObject(completedListsPageContainer);
@@ -292,6 +314,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* likesOnYourLevelPage = new UnlockPage(this, util->likesOnYourLevelUnlockDataList, "most_liked_spr.png"_spr);
         CCNode* likesOnYourLevelPageContainer = likesOnYourLevelPage->createPage(util->m_playerStats.maxLikes);
+        likesOnYourLevelPageContainer->setID("Most-Liked-Progression");
         likesOnYourLevelPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(likesOnYourLevelPageContainer);
         m_pages->addObject(likesOnYourLevelPageContainer);
@@ -302,6 +325,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
         UnlockPage* ratedLevelPage = new UnlockPage(this, util->creatorPointsUnlockDataList, "creator_points_spr.png"_spr);
         CCNode* ratedLevelPageContainer = ratedLevelPage->createPage(util->m_playerStats.ratedLevels);
+        ratedLevelPageContainer->setID("Creator-Point-Progression");
         ratedLevelPageContainer->setPosition({5.75f, 0});
         m_pageContainer->addChild(ratedLevelPageContainer);
         m_pages->addObject(ratedLevelPageContainer);
@@ -324,24 +348,29 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 void UnlockProgressionPopup::createBackgroundUI() {
 
     auto titleSpr = CCSprite::createWithSpriteFrameName("betterUnlockProgressionTitle.png"_spr);
+    titleSpr->setID("Title-Sprite");
     titleSpr->setPosition({75, 25});
     titleSpr->setScale(.4f);
     m_buttonMenu->addChild(titleSpr);
     
     auto creatorTitle = CCLabelBMFont::create("By GlowRock", "goldFont-uhd.fnt");
+    creatorTitle->setID("Water-Mark-Label");
     creatorTitle->setScale(.4f);
     auto creatorTitleButton = CCMenuItemSpriteExtra::create(
         creatorTitle,
         this,
         menu_selector(UnlockProgressionPopup::openProfile)
     );
+    creatorTitleButton->setID("Water-Mark-Button");
     creatorTitleButton->setPosition({373, 13});
     m_buttonMenu->addChild(creatorTitleButton);
 
     auto topLeftCornerSpr = CCSprite::createWithSpriteFrameName("dailyLevelCorner_001.png");
+    topLeftCornerSpr->setID("Corner-Sprite");
     topLeftCornerSpr->setAnchorPoint({0, 0});
     topLeftCornerSpr->setFlipY(true);
     auto topLeftNode = CCNode::create();
+    topLeftNode->setID("Corner-Node");
     topLeftNode->setPosition({0, 207});
     topLeftNode->setZOrder(-1);
     topLeftNode->addChild(topLeftCornerSpr);
@@ -349,19 +378,23 @@ void UnlockProgressionPopup::createBackgroundUI() {
 
 
     auto bottomRightCornerSpr = CCSprite::createWithSpriteFrameName("dailyLevelCorner_001.png");
+    bottomRightCornerSpr->setID("Corner-Sprite");
     bottomRightCornerSpr->setAnchorPoint({0, 0});
     bottomRightCornerSpr->setFlipX(true);
     auto bottomRightNode = CCNode::create();
+    bottomRightNode->setID("Corner-Node");
     bottomRightNode->setPosition({417.5f, 0});
     bottomRightNode->setZOrder(-1);
     bottomRightNode->addChild(bottomRightCornerSpr);
     m_buttonMenu->addChild(bottomRightNode);
 
     auto topRightCornerSpr = CCSprite::createWithSpriteFrameName("dailyLevelCorner_001.png");
+    topRightCornerSpr->setID("Corner-Sprite");
     topRightCornerSpr->setAnchorPoint({0, 0});
     topRightCornerSpr->setFlipY(true);
     topRightCornerSpr->setFlipX(true);
     auto topRightNode = CCNode::create();
+    topRightNode->setID("Corner-Node");
     topRightNode->setPosition({417.5f, 207});
     topRightNode->setZOrder(-1);
     topRightNode->addChild(topRightCornerSpr);
@@ -374,7 +407,9 @@ void UnlockProgressionPopup::createNavigationButtons() {
     float popupHeight = 256;
 
     auto prevArrowSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
+    prevArrowSpr->setID("Left-Arrow-Sprite");
     auto nextArrowSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
+    prevArrowSpr->setID("Right-Arrow-Sprite");
     nextArrowSpr->setFlipX(true);
 
     m_prevButton = CCMenuItemSpriteExtra::create(
@@ -383,6 +418,7 @@ void UnlockProgressionPopup::createNavigationButtons() {
         menu_selector(UnlockProgressionPopup::onPrevPage)
     );
     m_prevButton->setPosition({winSize.width * -0.05f + 2, popupHeight * 0.5f});
+    m_prevButton->setID("Left-Arrow-Button");
     m_buttonMenu->addChild(m_prevButton);
 
     m_nextButton = CCMenuItemSpriteExtra::create(
@@ -391,6 +427,7 @@ void UnlockProgressionPopup::createNavigationButtons() {
         menu_selector(UnlockProgressionPopup::onNextPage)
     );
     m_nextButton->setPosition({winSize.width * 0.85f + 9.35f, popupHeight * 0.5f});
+    m_nextButton->setID("Right-Arrow-Button");
     m_buttonMenu->addChild(m_nextButton);
 }
 
@@ -399,6 +436,7 @@ void UnlockProgressionPopup::createBottomNavigationButtons() {
     float popupHeight = 256;
 
     auto bgSpr = CCSprite::createWithSpriteFrameName("whiteSquare20_001.png");
+    bgSpr->setID("Dim-Sprite");
     bgSpr->setPosition({285, 150});
     bgSpr->setScale(200.f);
     bgSpr->setZOrder(-10);
@@ -407,14 +445,27 @@ void UnlockProgressionPopup::createBottomNavigationButtons() {
     this->addChild(bgSpr);
 
     auto navContainer = CCMenu::create();
+    navContainer->setID("Page-Navigation");
+
+
+
+    navContainer->setPosition({284.5f, 160});
+
 
     navDotOnSpr = CCSprite::createWithSpriteFrameName("gj_navDotBtn_on_001.png");
+    navDotOnSpr->setID("Page-Selected");
     navDotOffSpr = CCSprite::createWithSpriteFrameName("gj_navDotBtn_off_001.png");
+    navDotOffSpr->setID("Page-Deselected");
 
     const float y = -175;
     const float spacing = 24;
 
     float totalWidth = m_totalPages * spacing;
+
+    //auto winSize = CCDirector::sharedDirector()->getWinSize();
+    //log::info("width: {}", winSize.width);
+
+    //float offset = (float) winSize.width / -11.1568f;
 
     float startX = -51 - (totalWidth / 2) + (spacing / 2);
 
@@ -424,6 +475,7 @@ void UnlockProgressionPopup::createBottomNavigationButtons() {
             this,
             menu_selector(UnlockProgressionPopup::onPageBtn)
         );
+        button->setID("Page-Selector");
         button->setTag(i);
         button->setPosition({startX + i * spacing, y});
         navDots.push_back(button);

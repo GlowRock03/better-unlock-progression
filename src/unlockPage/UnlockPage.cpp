@@ -14,24 +14,11 @@ CCNode* UnlockPage::createPage(int value) {
 
     pageContainer->setPosition({0, 0});
     buttonMenu->setPosition({147, -200});
+    buttonMenu->setID("Page-Menu");
     pageContainer->addChild(buttonMenu);
 
-    auto labelSpr = CCSprite::createWithSpriteFrameName(iconSprName);
-    labelSpr->setPosition({227.5f, 185});
-    labelSpr->setScale(0.65f);
-    pageContainer->addChild(labelSpr);
+    createTitle(iconSprName, pageContainer);
 
-    auto player = SimplePlayer::create(1);
-    player->updatePlayerFrame(util->gameManager->m_playerFrame, IconType::Cube);
-    player->setColors(util->gameManager->colorForIdx(util->gameManager->getPlayerColor()), util->gameManager->colorForIdx(util->gameManager->getPlayerColor2()));
-    if (util->gameManager->m_playerGlow) {
-        player->setGlowOutline(util->gameManager->colorForIdx(util->gameManager->getPlayerGlowColor()));
-    }
-    player->setPosition({228, 200});
-    player->setScale(1.35f);
-    pageContainer->addChild(player);
-
-    //add speical refreshes for friend page, most liked level, and creator points
     if (std::string(iconSprName).compare("friends_spr.png"_spr) == 0 || std::string(iconSprName).compare("most_liked_spr.png"_spr) == 0 || std::string(iconSprName).compare("creator_points_spr.png"_spr) == 0) {
 
         createRefreshButton();
@@ -70,14 +57,18 @@ CCNode* UnlockPage::createTier(int tier, int value) {
 
     /* Completion Stars */
     auto tierCompletedStar1 = CCSprite::createWithSpriteFrameName("GJ_bigStar_001.png");
+    tierCompletedStar1->setID("Tier-Complete-Top");
     auto tierCompletedStarGlow1 = CCSprite::createWithSpriteFrameName("GJ_bigStar_glow_001.png");
+    tierCompletedStarGlow1->setID("Tier-Complete-Bottom");
     tierCompletedStarGlow1->setAnchorPoint({0, 0});
     tierCompletedStarGlow1->setPosition({-11, -11});
     tierCompletedStarGlow1->setZOrder(-1);
     tierCompletedStar1->addChild(tierCompletedStarGlow1);
 
     auto tierCompletedStar2 = CCSprite::createWithSpriteFrameName("GJ_bigStar_001.png");
+    tierCompletedStar2->setID("Tier-Complete-Top");
     auto tierCompletedStarGlow2 = CCSprite::createWithSpriteFrameName("GJ_bigStar_glow_001.png");
+    tierCompletedStarGlow2->setID("Tier-Complete-Bottom");
     tierCompletedStarGlow2->setAnchorPoint({0, 0});
     tierCompletedStarGlow2->setPosition({-11, -11});
     tierCompletedStarGlow2->setZOrder(-1);
@@ -99,11 +90,26 @@ CCNode* UnlockPage::createTier(int tier, int value) {
 
     bool progressPlaced = false;
     for (int i = startIdx; i < endIdx; ++i) {
+
+        std::string specialPlacement = "";
+        if (std::string(iconSprName).compare("stars_spr.png"_spr) == 0 && unlockList[i + 1]->numberString.compare("700") == 0) {
+
+            specialPlacement = "star-700";
+        } else if (std::string(iconSprName).compare("stars_spr.png"_spr) == 0 && unlockList[i + 1]->numberString.compare("7000") == 0) {
+
+            specialPlacement = "star-7000";
+        } else if (std::string(iconSprName).compare("diamonds_spr.png"_spr) == 0 && unlockList[i + 1]->numberString.compare("2500") == 0) {
+
+            specialPlacement = "diamond-2500";
+        } else if (std::string(iconSprName).compare("completed_demons_spr.png"_spr) == 0 && unlockList[i + 1]->numberString.compare("60") == 0) {
+
+            specialPlacement = "demon-60";
+        }
         
         progressPlaced = util->placeUnlockable(this, value, currentProgressText, 
                                             progressPlaced, tierContainer, tierMenu, 
                                             unlockList[i], unlockList[i + 1], 
-                                            unlockList[startIdx], unlockList[endIdx]);
+                                            unlockList[startIdx], unlockList[endIdx], specialPlacement);
     }
 
     if (value >= std::stoi(unlockList[endIdx]->numberString)) {
@@ -130,6 +136,7 @@ CCNode* UnlockPage::createTier(int tier, int value) {
 void UnlockPage::createRefreshButton() {
 
     CCSprite* refreshSpr = CCSprite::createWithSpriteFrameName("GJ_replayBtn_001.png");
+    refreshSpr->setID("Refresh-Sprite");
     refreshSpr->setScale(.75f);
 
     CCMenuItemSpriteExtra* refreshButton;
@@ -143,23 +150,27 @@ void UnlockPage::createRefreshButton() {
         );
     } else if (std::string(iconSprName).compare("most_liked_spr.png"_spr) == 0) {
 
-        CCSprite* supportSpr = CCSprite::create("support_me_spr.png"_spr);
+        CCSprite* supportSpr = CCSprite::createWithSpriteFrameName("GJ_plainBtn_001.png");
+        supportSpr->setID("Support-Plain-Sprite");
         supportSpr->setScale(0.99f);
         supportSpr->setRotation(270.f);
 
         CCSprite* supportLikeSpr = CCSprite::createWithSpriteFrameName("GJ_likesIcon_001.png");
+        supportLikeSpr->setID("Support-Like-Sprite");
         supportLikeSpr->setPosition({33, 24});
         supportLikeSpr->setScale(0.7f);
         supportLikeSpr->setRotation(90.f);
         supportSpr->addChild(supportLikeSpr);
 
         auto supportText1 = CCLabelBMFont::create("Support", "bigFont-uhd.fnt");
+        supportText1->setID("Support-Test-1");
         supportText1->setPosition({21, 24});
         supportText1->setScale(0.225f);
         supportText1->setRotation(90.f);
         supportSpr->addChild(supportText1);
 
         auto supportText2 = CCLabelBMFont::create("Me", "bigFont-uhd.fnt");
+        supportText2->setID("Support-Test-2");
         supportText2->setPosition({14, 23.75f});
         supportText2->setScale(0.225f);
         supportText2->setRotation(90.f);
@@ -176,6 +187,7 @@ void UnlockPage::createRefreshButton() {
             menu_selector(UnlockPage::openSupportMeLevel)
         );
 
+        supportMeButton->setID("Support-Button");
         supportMeButton->setAnchorPoint({.5f, .5f});
         supportMeButton->setPosition({220, 245});
         buttonMenu->addChild(supportMeButton);
@@ -188,6 +200,7 @@ void UnlockPage::createRefreshButton() {
         );
     }
 
+    refreshButton->setID("Refresh-Button");
     refreshButton->setAnchorPoint({.5f, .5f});
     refreshButton->setPosition({270, 245});
 
@@ -204,7 +217,7 @@ void UnlockPage::openSupportMeLevel(CCObject* sender) {
 void UnlockPage::refreshFriends(CCObject* sender) {
 
     int num = processFriendCount();
-    util->updatePage(num, pageNode, util->friendsUnlockDataList, iconSprName);  //change this to the page node
+    util->updatePage(num, pageNode, util->friendsUnlockDataList, iconSprName);
     makeInfoPopup("Friends");
 }
 
@@ -269,8 +282,6 @@ int UnlockPage::processFriendCount() {
 
     Mod::get()->setSavedValue<int>(fmt::format("friends-{}", userId), friendCount);
 
-    log::info("saved value: {}", Mod::get()->getSavedValue<int>(fmt::format("friends-{}", userId)));
-
     return friendCount;
 }
 
@@ -314,8 +325,7 @@ void UnlockPage::requestMostLiked(int page) {
                 
                 Mod::get()->setSavedValue<int>(fmt::format("most-liked-{}", userId), maxLikes);
 
-                //updateProgression(maxLikes);
-
+                util->updatePage(maxLikes, pageNode, util->likesOnYourLevelUnlockDataList, iconSprName);
             }
 
         } else if (e->getProgress()) {
@@ -391,7 +401,7 @@ void UnlockPage::requestCreatorPoints() {
 
             Mod::get()->setSavedValue<int>(fmt::format("creator-points-{}", accountId), creatorPoints);
 
-            //updateProgression(creatorPoints);
+            util->updatePage(creatorPoints, pageNode, util->creatorPointsUnlockDataList, iconSprName);
 
         } else if (web::WebProgress* progress = e->getProgress()) {
             log::info("{}", "progress");

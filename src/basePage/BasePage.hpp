@@ -39,6 +39,7 @@ public:
     BasePage(FLAlertLayer* parentPopup);
     ~BasePage();
 
+    void createTitle(const char* title, CCNode* pageContainer);
     void createNavigationButtons(int tierAmount);
     void onTierButton(CCObject* sender);
     void updatePageVisibility(int tag);

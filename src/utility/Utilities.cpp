@@ -560,7 +560,7 @@ void Utilities::openUnlockInfo(CCObject* sender) {
     }
 }
 
-float Utilities::calculateXPosition(std::string type, int unlockNumOnPage, int pageSize) {
+float Utilities::calculateXPosition(std::string type, int unlockNumOnPage, int pageSize, std::string specialCase) {
 
     std::vector<float> positions;
     if (type.compare("progress_text") == 0) {
@@ -676,32 +676,47 @@ float Utilities::calculateXPosition(std::string type, int unlockNumOnPage, int p
                 positions = {33};
         }
     } else {        //"unlock_button"
-        
-        switch (pageSize) {
 
-            case 10:
-                positions = {-427, -340.5f, -252, -163, -73, -427, -340.5f, -252, -163, -73};
-                break;
-            case 8:
-                positions = {-427, -340.5f, -252, -163, -73, -340.5f, -252, -163};
-                break;
-            case 7:
-                positions = {-383.5f, -297.5f, -208.5f, -119.5f, -340.5f, -252, -163};
-                break;
-            case 6:
-                positions = {-340.5f, -252, -163, -340.5f, -252, -163};
-                break;
-            case 5:
-                positions = {-340.5f, -252, -163, -297.5f, -208.5f};
-                break;
-            case 4:
-                positions = {-340.5f, -252, -163, -252};
-                break;
-            case 3:
-                positions = {-297.5f, -208.5f, -252};
-                break;
-            default:    //page size 1
-                positions = {-251};
+        if (specialCase.compare("star-700") == 0) {
+
+            return -342.5f;
+        } else if (specialCase.compare("star-7000") == 0) {
+            
+            return -339.5f;
+        } else if (specialCase.compare("diamond-2500") == 0) {
+            
+            return -344.5f;
+        } else if (specialCase.compare("demon-60") == 0) {
+            
+            return -339;
+        } else {
+
+            switch (pageSize) {
+
+                case 10:
+                    positions = {-427, -340.5f, -252, -163, -73, -427, -340.5f, -252, -163, -73};
+                    break;
+                case 8:
+                    positions = {-427, -340.5f, -252, -163, -73, -340.5f, -252, -163};
+                    break;
+                case 7:
+                    positions = {-383.5f, -297.5f, -208.5f, -119.5f, -340.5f, -252, -163};
+                    break;
+                case 6:
+                    positions = {-340.5f, -252, -163, -340.5f, -252, -163};
+                    break;
+                case 5:
+                    positions = {-340.5f, -252, -163, -297.5f, -208.5f};
+                    break;
+                case 4:
+                    positions = {-340.5f, -252, -163, -252};
+                    break;
+                case 3:
+                    positions = {-297.5f, -208.5f, -252};
+                    break;
+                default:    //page size 1
+                    positions = {-251};
+            }
         }
     }
 
@@ -761,9 +776,10 @@ float Utilities::calculateYPosition(std::string type, int unlockNumOnPage, int p
     return position;
 }
 
-bool Utilities::placeUnlockable(CCObject* object, int value, CCLabelBMFont* currentProgressText, bool progressPlaced, CCNode* tierContainer, CCMenu* tierMenu, UnlockData* previousUnlockData, UnlockData* currentUnlockData, UnlockData* endOfPreviousTier, UnlockData* endOfTier) {
+bool Utilities::placeUnlockable(CCObject* object, int value, CCLabelBMFont* currentProgressText, bool progressPlaced, CCNode* tierContainer, CCMenu* tierMenu, UnlockData* previousUnlockData, UnlockData* currentUnlockData, UnlockData* endOfPreviousTier, UnlockData* endOfTier, std::string specialPlacement) {
 
     auto sliderOutlineSpr = CCSprite::createWithSpriteFrameName("progressOutline.png"_spr);
+    sliderOutlineSpr->setID("Progress-Outline");
     auto sliderBarSpr = togglePlayerColours ? CCSprite::create("sliderBar2-uhd.png") : CCSprite::create("sliderBar-uhd.png");
     sliderBarSpr->setID("Slider-Bar");
     sliderBarSpr->setUserObject(CCFloat::create(sliderBarSpr->getContentSize().width));
@@ -771,6 +787,7 @@ bool Utilities::placeUnlockable(CCObject* object, int value, CCLabelBMFont* curr
     float scale = ratio >= 0.98f ? sliderBarSpr->getContentSize().width * 0.98f : sliderBarSpr->getContentSize().width * ratio;
     sliderBarSpr->setTextureRect(CCRectMake(0, 0, scale, sliderBarSpr->getContentSize().height));
     auto unlockText = CCLabelBMFont::create(Utilities::addCommas(currentUnlockData->numberString.c_str()), "bigFont-uhd.fnt");
+    unlockText->setID("Unlock-Text");
     auto lock = CCSprite::createWithSpriteFrameName("GJ_lockGray_001.png");
     lock->setID("Lock");
 
@@ -787,17 +804,20 @@ bool Utilities::placeUnlockable(CCObject* object, int value, CCLabelBMFont* curr
     GJItemIcon* unlockItem = nullptr;
     if (currentUnlockData->type.compare("icon") == 0) {
         unlockIcon = SimplePlayer::create(1);
+        unlockIcon->setID("Icon");
     } else if (currentUnlockData->type.compare("colour") == 0) {
         unlockColour = ColorChannelSprite::create();
+        unlockColour->setID("Colour");
     } else {
         unlockItem = GJItemIcon::createBrowserItem(gameManager->iconTypeToUnlockType(unlockInfo->unlockType), currentUnlockData->unlockId);
+        unlockItem->setID("Item");
     }
 
     bool isInTier = value >= std::stoi(endOfPreviousTier->numberString) && value < std::stoi(endOfTier->numberString);
     if (ratio < 1.f && isInTier && !progressPlaced) {
 
         currentProgressText->setString(addCommas(std::to_string(value).c_str()));
-        currentProgressText->setPosition({ calculateXPosition("progress_text", currentUnlockData->index, currentUnlockData->pageSize), calculateYPosition("progress_text", currentUnlockData->index, currentUnlockData->pageSize) });
+        currentProgressText->setPosition({ calculateXPosition("progress_text", currentUnlockData->index, currentUnlockData->pageSize, ""), calculateYPosition("progress_text", currentUnlockData->index, currentUnlockData->pageSize) });
         tierContainer->addChild(currentProgressText);   
         progressPlaced = true;
     }
@@ -829,15 +849,15 @@ bool Utilities::placeUnlockable(CCObject* object, int value, CCLabelBMFont* curr
         }
     }
     
-    sliderBarSpr->setAnchorPoint({ 0, .5f }); sliderBarSpr->setZOrder(-1); sliderBarSpr->setPosition({ calculateXPosition("slider_bar", currentUnlockData->index, currentUnlockData->pageSize), calculateYPosition("slider_bar", currentUnlockData->index, currentUnlockData->pageSize) });
-    sliderOutlineSpr->setAnchorPoint({ 0, .5f }); sliderOutlineSpr->setScaleX(1.1f); sliderOutlineSpr->setPosition({ calculateXPosition("slider_outline", currentUnlockData->index, currentUnlockData->pageSize), calculateYPosition("slider_outline", currentUnlockData->index, currentUnlockData->pageSize) });      
+    sliderBarSpr->setAnchorPoint({ 0, .5f }); sliderBarSpr->setZOrder(-1); sliderBarSpr->setPosition({ calculateXPosition("slider_bar", currentUnlockData->index, currentUnlockData->pageSize, ""), calculateYPosition("slider_bar", currentUnlockData->index, currentUnlockData->pageSize) });
+    sliderOutlineSpr->setAnchorPoint({ 0, .5f }); sliderOutlineSpr->setScaleX(1.1f); sliderOutlineSpr->setPosition({ calculateXPosition("slider_outline", currentUnlockData->index, currentUnlockData->pageSize, ""), calculateYPosition("slider_outline", currentUnlockData->index, currentUnlockData->pageSize) });      
     if (currentUnlockData->type.compare("colour") == 0) {     
         lock->setPosition({17.75f, 18.25f});
     } else if (currentUnlockData->type.compare("item") == 0) {
         lock->setPosition({15, 15});
     }
     lock->setZOrder(1); 
-    unlockText->setScale(.5f); unlockText->setPosition({ calculateXPosition("unlock_text", currentUnlockData->index, currentUnlockData->pageSize), calculateYPosition("unlock_text", currentUnlockData->index, currentUnlockData->pageSize) });
+    unlockText->setScale(.5f); unlockText->setPosition({ calculateXPosition("unlock_text", currentUnlockData->index, currentUnlockData->pageSize, ""), calculateYPosition("unlock_text", currentUnlockData->index, currentUnlockData->pageSize) });
 
     CCMenuItemSpriteExtra* unlockButton = nullptr;
     if (currentUnlockData->type.compare("icon") == 0) {
@@ -862,6 +882,7 @@ bool Utilities::placeUnlockable(CCObject* object, int value, CCLabelBMFont* curr
             menu_selector(Utilities::openUnlockInfo)
         );
     }
+    unlockButton->setID("Unlock-Button");
     unlockButton->setUserObject(unlockInfo);
 
     if (currentUnlockData->type.compare("icon") == 0) {
@@ -870,11 +891,14 @@ bool Utilities::placeUnlockable(CCObject* object, int value, CCLabelBMFont* curr
         innerSpr->setPosition({unlockIcon->m_firstLayer->getContentSize().width / 2.f, unlockIcon->m_firstLayer->getContentSize().height / 2.f});
     }
 
-    unlockButton->setPosition({ calculateXPosition("unlock_button", currentUnlockData->index, currentUnlockData->pageSize), calculateYPosition("unlock_button", currentUnlockData->index, currentUnlockData->pageSize) });
+    unlockButton->setPosition({ calculateXPosition("unlock_button", currentUnlockData->index, currentUnlockData->pageSize, specialPlacement), calculateYPosition("unlock_button", currentUnlockData->index, currentUnlockData->pageSize) });
+    
     tierContainer->addChild(sliderBarSpr);
     tierContainer->addChild(sliderOutlineSpr);
     tierMenu->addChild(unlockButton);
     tierContainer->addChild(unlockText);
+
+    tierMenu->setID("Tier-Unlock-Menu");
 
     return progressPlaced;
 }
@@ -951,7 +975,7 @@ void Utilities::updatePage(int newValue, CCNode* pageNode, std::vector<UnlockDat
                             if (ratio < 1.f && isInTier && !progressPlaced) {
                         
                                 progressText->setString(addCommas(std::to_string(newValue).c_str()));
-                                progressText->setPosition({ calculateXPosition("progress_text", unlockList[progressIndex]->index, unlockList[progressIndex]->pageSize), calculateYPosition("progress_text", unlockList[progressIndex]->index, unlockList[progressIndex]->pageSize) });
+                                progressText->setPosition({ calculateXPosition("progress_text", unlockList[progressIndex]->index, unlockList[progressIndex]->pageSize, ""), calculateYPosition("progress_text", unlockList[progressIndex]->index, unlockList[progressIndex]->pageSize) });
                                 progressPlaced = true;
                             }
                         }
@@ -1095,7 +1119,9 @@ void Utilities::updatePage(int newValue, CCNode* pageNode, std::vector<UnlockDat
             if (! found && newValue >= std::stoi(unlockList[endIdx]->numberString)) {
 
                 auto tierCompletedStar1 = CCSprite::createWithSpriteFrameName("GJ_bigStar_001.png");
+                tierCompletedStar1->setID("Tier-Complete-Top");
                 auto tierCompletedStarGlow1 = CCSprite::createWithSpriteFrameName("GJ_bigStar_glow_001.png");
+                tierCompletedStarGlow1->setID("Tier-Complete-Bottom");
                 tierCompletedStarGlow1->setAnchorPoint({0, 0});
                 tierCompletedStarGlow1->setPosition({-11, -11});
                 tierCompletedStarGlow1->setZOrder(-1);
@@ -1103,7 +1129,9 @@ void Utilities::updatePage(int newValue, CCNode* pageNode, std::vector<UnlockDat
                 tierCompletedStar1->addChild(tierCompletedStarGlow1);
             
                 auto tierCompletedStar2 = CCSprite::createWithSpriteFrameName("GJ_bigStar_001.png");
+                tierCompletedStar2->setID("Tier-Complete-Top");
                 auto tierCompletedStarGlow2 = CCSprite::createWithSpriteFrameName("GJ_bigStar_glow_001.png");
+                tierCompletedStarGlow2->setID("Tier-Complete-Bottom");
                 tierCompletedStarGlow2->setAnchorPoint({0, 0});
                 tierCompletedStarGlow2->setPosition({-11, -11});
                 tierCompletedStarGlow2->setZOrder(-1);

@@ -106,13 +106,13 @@ public:
     const char* addCommas(const char* number);                                              //to do: both of these
     void openUnlockInfo(CCObject* sender);
 
-    float calculateXPosition(std::string type, int unlockNumOnPage, int pageSize);
+    float calculateXPosition(std::string type, int unlockNumOnPage, int pageSize, std::string specialCase);
     float calculateYPosition(std::string type, int unlockNumOnPage, int pageSize);
 
     bool placeUnlockable(CCObject* object, int value, CCLabelBMFont* currentProgressText,                     //to do: add positioning. def struct/list and use positions found to place based on page size and unlock number
                         bool progressPlaced, CCNode* tierContainer, CCMenu* tierMenu, 
                         UnlockData* previousUnlockData, UnlockData* currentUnlockData, 
-                        UnlockData* endOfPreviousTier, UnlockData* endOfTier);
+                        UnlockData* endOfPreviousTier, UnlockData* endOfTier, std::string specialPlacement);
 
     void updatePage(int newValue, CCNode* pageNode, std::vector<UnlockData*> unlockList, const char* iconSprName);
 
