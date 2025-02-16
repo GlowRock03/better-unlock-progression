@@ -11,6 +11,9 @@ using namespace geode::prelude;
 
 #include <Geode/binding/LevelDownloadDelegate.hpp>
 class MyLevelDownloadDelegate : public LevelDownloadDelegate {
+private:
+
+    int id = 114471227;
 public:
 
     static MyLevelDownloadDelegate* get() {

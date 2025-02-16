@@ -21,6 +21,31 @@ public:
 
     // some class members 
 
+    struct PlayerStats {
+        int stars;
+        int moons;
+        int secretCoins;
+        int userCoins;
+        int diamonds;
+        int jumps;
+        int attempts;
+        int destoryedPlayers;
+        int friends;
+        int followedCreators;
+        int likesAndDislikes;
+        int rateStarsOnLevels;
+        int completedInsanes;
+        int completedDemons;
+        int completedOnline;
+        int completedDaily;
+        int completedMapPacks;
+        int completedGauntlets;
+        int completedLists;
+        int maxLikes;
+        int ratedLevels;
+    };
+    PlayerStats m_playerStats;
+
     struct UnlockData : public cocos2d::CCObject {
         std::string numberString;   //unlock value
         int unlockId;               //icon id
@@ -88,6 +113,8 @@ public:
                         bool progressPlaced, CCNode* tierContainer, CCMenu* tierMenu, 
                         UnlockData* previousUnlockData, UnlockData* currentUnlockData, 
                         UnlockData* endOfPreviousTier, UnlockData* endOfTier);
+
+    void updatePage(int newValue, CCNode* pageNode, std::vector<UnlockData*> unlockList, const char* iconSprName);
 
     std::vector<std::string> split(const std::string& str, const std::string& delimiter);
 };

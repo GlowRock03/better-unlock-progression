@@ -21,9 +21,6 @@ private:
     GameStatsManager* gameStatsManager;
     GameLevelManager* gameLevelManager;
 
-    //ProcessTotalFriends processFriends;
-    //FriendPage* friendsPage;
-
     CCNode* m_pageContainer = nullptr;
     float m_pageWidth;
     CCArray* m_pages = nullptr;
@@ -36,34 +33,7 @@ private:
     CCSprite* navDotOffSpr = nullptr;
     std::vector<CCMenuItemSpriteExtra*> navDots;
 
-    bool showFriendPage;
-
     Utilities* util;
-
-    struct PlayerStats {
-        int stars;
-        int moons;
-        int secretCoins;
-        int userCoins;
-        int diamonds;
-        int jumps;
-        int attempts;
-        int destoryedPlayers;
-        int friends;
-        int followedCreators;
-        int likesAndDislikes;
-        int rateStarsOnLevels;
-        int completedInsanes;
-        int completedDemons;
-        int completedOnline;
-        int completedDaily;
-        int completedMapPacks;
-        int completedGauntlets;
-        int completedLists;
-        int maxLikes;
-        int ratedLevels;
-    };
-    PlayerStats m_playerStats;
 
 public:
 
@@ -82,7 +52,6 @@ public:
     void updatePageVisibility();
     void updateButtonVisibility();
     void getAllStats();
-
 };
 
 #endif

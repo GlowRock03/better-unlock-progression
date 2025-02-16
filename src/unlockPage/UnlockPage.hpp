@@ -22,7 +22,7 @@ private:
     std::vector<Utilities::UnlockData*> unlockList;
     const char* iconSprName;
 
-    //RequestMostLiked* mostLikedRequest;
+    CCNode* pageNode;
 
     EventListener<web::WebTask> mostLikedListener;
     EventListener<web::WebTask> creatorPointsListener;
@@ -44,9 +44,6 @@ public:
     void refreshCreatorPoints(CCObject* sender);
     void makeInfoPopup(std::string type);
     void openSupportMeLevel(CCObject* sender);
-
-    void checkLevelDownloaded(float dt);
-    void openLevel(GJGameLevel* level);
 
     int processFriendCount();
 

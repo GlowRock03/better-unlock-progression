@@ -39,6 +39,7 @@ CCNode* UnlockPage::createPage(int value) {
 
     for (int i = 0; i < tierCount; ++i) {
         auto tierPage = createTier(i, value);
+        tierPage->setID("Tier-Node");
         tierPage->retain();
         pageContainer->addChild(tierPage);
         tierPages->addObject(tierPage);
@@ -48,7 +49,7 @@ CCNode* UnlockPage::createPage(int value) {
     createNavigationButtons(tierCount);
 
     pageContainer->setPosition({pageWidth, 0});
-
+    pageNode = pageContainer;
     return pageContainer;
 }
 
@@ -65,6 +66,7 @@ CCNode* UnlockPage::createTier(int tier, int value) {
     /* Moving Progress Text */
     auto currentProgressText = CCLabelBMFont::create("", "bigFont-uhd.fnt");
     currentProgressText->setScale(0.35f);
+    currentProgressText->setID("Progress-Text");
 
     /* Completion Stars */
     auto tierCompletedStar1 = CCSprite::createWithSpriteFrameName("GJ_bigStar_001.png");
@@ -195,43 +197,14 @@ void UnlockPage::createRefreshButton() {
 void UnlockPage::openSupportMeLevel(CCObject* sender) {
 
     int id = 114471227;
-
     GameLevelManager::sharedState()->downloadLevel(id, false);
-
     GameLevelManager::get()->m_levelDownloadDelegate = MyLevelDownloadDelegate::get();
-
-    //auto scheduler = CCDirector::sharedDirector()->getScheduler();
-    //scheduler->scheduleSelector(schedule_selector(UnlockPage::checkLevelDownloaded), this, 0.2f, false);
-}
-
-void UnlockPage::checkLevelDownloaded(float dt) {
-
-    auto level = GameLevelManager::sharedState()->getSavedLevel(114471227);
-    if (level) {
-
-        log::info("level is not null");
-        bool downloadedRight = GameLevelManager::sharedState()->hasDownloadedLevel(114471227);
-        log::info("Result: {}", downloadedRight);
-
-        auto scheduler = CCDirector::sharedDirector()->getScheduler();
-        scheduler->unscheduleSelector(schedule_selector(UnlockPage::checkLevelDownloaded), this);
-        openLevel(level);
-    }
-}
-
-void UnlockPage::openLevel(GJGameLevel* level) {
-
-    auto levelLayer = LevelInfoLayer::create(level, false);
-    auto scene = CCScene::create();
-    scene->addChild(levelLayer);
-    CCDirector::sharedDirector()->pushScene(CCTransitionFade::create(0.5, scene));
 }
 
 void UnlockPage::refreshFriends(CCObject* sender) {
 
     int num = processFriendCount();
-    num = processFriendCount();
-    log::info("result: {}", num);
+    util->updatePage(num, pageNode, util->friendsUnlockDataList, iconSprName);  //change this to the page node
     makeInfoPopup("Friends");
 }
 
@@ -293,6 +266,10 @@ int UnlockPage::processFriendCount() {
     m_friendsPage->removeFromParentAndCleanup(true);
     m_friendsPage->release();
     m_friendsPage = nullptr;
+
+    Mod::get()->setSavedValue<int>(fmt::format("friends-{}", userId), friendCount);
+
+    log::info("saved value: {}", Mod::get()->getSavedValue<int>(fmt::format("friends-{}", userId)));
 
     return friendCount;
 }
