@@ -6,7 +6,7 @@
 #include <Geode/loader/Event.hpp>
 #include <Geode/binding/GameLevelManager.hpp>
 #include <Geode/binding/LevelDownloadDelegate.hpp>
-
+#include <Geode/ui/Notification.hpp>
 
 #include "../basePage/BasePage.hpp"
 #include "../utility/Utilities.hpp"

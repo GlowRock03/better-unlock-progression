@@ -31,6 +31,7 @@ class $modify(MyGJGarageLayer, GJGarageLayer) {
 
 		auto popup = UnlockProgressionPopup::create("Icon progression");
 		popup->setID("Better-Unlock-Progression"_spr);
+		popup->setZOrder(95);
 		if (popup) {
 			
 			popup->show();

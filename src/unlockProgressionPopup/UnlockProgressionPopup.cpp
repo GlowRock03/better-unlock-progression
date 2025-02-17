@@ -42,28 +42,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
     getAllStats();
 
-    auto showStarPage = Mod::get()->getSettingValue<bool>("show-star-page");
-    auto showMoonPage = Mod::get()->getSettingValue<bool>("show-moon-page");
-    auto showSecretCoinPage = Mod::get()->getSettingValue<bool>("show-secret-coin-page");
-    auto showUserCoinPage = Mod::get()->getSettingValue<bool>("show-user-coin-page");
-    auto showDiamondPage = Mod::get()->getSettingValue<bool>("show-diamond-page");
-    auto showJumpPage = Mod::get()->getSettingValue<bool>("show-jump-page");
-    auto showAttemptPage = Mod::get()->getSettingValue<bool>("show-attempts-page");
-    auto showDestroyedPlayerPage = Mod::get()->getSettingValue<bool>("show-destroyed-players-page");
-    auto showFriendPage = Mod::get()->getSettingValue<bool>("show-friend-page");
-    auto showFollowCreatorPage = Mod::get()->getSettingValue<bool>("show-follow-creator-page");
-    auto showLikeDislikePage = Mod::get()->getSettingValue<bool>("show-like-dislike-page");
-    auto showRateStarsPage = Mod::get()->getSettingValue<bool>("show-rate-stars-page");
-    auto showInsanePage = Mod::get()->getSettingValue<bool>("show-insane-page");
-    auto showDemonPage = Mod::get()->getSettingValue<bool>("show-demon-page");
-    auto showOnlinePage = Mod::get()->getSettingValue<bool>("show-online-page");
-    auto showDailyPage = Mod::get()->getSettingValue<bool>("show-daily-page");
-    auto showMapPackPage = Mod::get()->getSettingValue<bool>("show-map-pack-page");
-    auto showGauntletPage = Mod::get()->getSettingValue<bool>("show-gauntlet-page");
-    auto showListPage = Mod::get()->getSettingValue<bool>("show-list-page");
-    auto showMostLikedPage = Mod::get()->getSettingValue<bool>("show-most-liked-level-page");
-    auto showRatedLevelPage = Mod::get()->getSettingValue<bool>("show-rated-level-page");
-
+    std::vector<bool> showList(21);
     std::vector<std::string> modSettingKeys = {
         "show-star-page", "show-moon-page", "show-secret-coin-page", "show-user-coin-page",
         "show-diamond-page", "show-jump-page", "show-attempts-page", "show-destroyed-players-page",
@@ -71,265 +50,75 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
         "show-insane-page", "show-demon-page", "show-online-page", "show-daily-page",
         "show-map-pack-page", "show-gauntlet-page", "show-list-page", "show-most-liked-level-page", "show-rated-level-page"
     };
+    std::vector<std::vector<Utilities::UnlockData*>> allUnlocksList = {
+        util->starUnlockDataList, util->moonUnlockDataList, util->secretCoinUnlockDataList,
+        util->userCoinUnlockDataList, util->diamondUnlockDataList, util->jumpsUnlockDataList,
+        util->attemptsUnlockDataList, util->destroyedPlayersUnlockDataList, util->friendsUnlockDataList,
+        util->followCreatorsUnlockDataList, util->likeDislikeUnlockDataList, util->rateStarsUnlockDataList,
+        util->completedInsaneUnlockDataList, util->completedDemonUnlockDataList, util->completedOnlineUnlockDataList,
+        util->completedDailyUnlockDataList, util->completedMapPacksUnlockDataList, util->completedGauntletsUnlockDataList,
+        util->completedListsUnlockDataList, util->likesOnYourLevelUnlockDataList, util->creatorPointsUnlockDataList
+    };
+    std::vector<const char*> allTitleSprites = {
+        "stars_spr.png"_spr, "moons_spr.png"_spr, "secret_coins_spr.png"_spr, "user_coins_spr.png"_spr,
+        "diamonds_spr.png"_spr, "jumps_spr.png"_spr, "attempts_spr.png"_spr, "destroyed_players_spr.png"_spr,
+        "friends_spr.png"_spr, "follow_creators_spr.png"_spr, "like_dislike_spr.png"_spr, "rate_stars_spr.png"_spr,
+        "completed_insanes_spr.png"_spr, "completed_demons_spr.png"_spr, "completed_online_spr.png"_spr,
+        "completed_daily_spr.png"_spr, "completed_map_packs_spr.png"_spr, "completed_gauntlets_spr.png"_spr,
+        "completed_lists_spr.png"_spr, "most_liked_spr.png"_spr, "creator_points_spr.png"_spr
+    };
+    std::vector<int> statsList(21);
+    statsList = {
+        util->m_playerStats.stars, util->m_playerStats.moons, util->m_playerStats.secretCoins, util->m_playerStats.userCoins,
+        util->m_playerStats.diamonds, util->m_playerStats.jumps, util->m_playerStats.attempts, util->m_playerStats.destoryedPlayers,
+        util->m_playerStats.friends, util->m_playerStats.followedCreators, util->m_playerStats.likesAndDislikes, util->m_playerStats.rateStarsOnLevels,
+        util->m_playerStats.completedInsanes, util->m_playerStats.completedDemons, util->m_playerStats.completedOnline, util->m_playerStats.completedDaily,
+        util->m_playerStats.completedMapPacks, util->m_playerStats.completedGauntlets, util->m_playerStats.completedLists, util->m_playerStats.maxLikes,
+        util->m_playerStats.ratedLevels
+    };
+    std::vector<std::string> pageIdList = {
+        "Stars-Progression", "Moons-Progression", "Secret-Coin-Progression", "User-Coin-Progression", "Diamond-Progression",
+        "Jump-Progression", "Attempt-Progression", "Destroyed-Players-Progression", "Friend-Progression", "Followed-Creators-Progression",
+        "Like-Dislike-Progression", "Rate-Stars-Progression", "Completed-Insanes-Progression", "Completed-Demons-Progression",
+        "Completed-Online-Progression", "Completed-Daily-Progression", "Completed-Map-Packs-Progression", "Completed-Gauntlets-Progression",
+        "Completed-Lists-Progression", "Most-Liked-Progression", "Creator-Point-Progression"
+    };
 
     int disabledSettings = 0;
+    int j = 0;
     for (const auto& key : modSettingKeys) {
-        if (!Mod::get()->getSettingValue<bool>(key)) {
+
+        bool value = Mod::get()->getSettingValue<bool>(key);
+        showList[j] = value;
+        if (!value) {
             ++disabledSettings;
         }
+        ++j;
     }
-    m_totalPages = 21 - disabledSettings;
 
-    //create all progression pages
+    for (int i = 0; i < 21; ++i) {
+        if (showList[i]) {
+            UnlockPage* page = new UnlockPage(this, allUnlocksList[i], allTitleSprites[i]);
+            CCNode* pageContainer = page->createPage(statsList[i]);
+            pageContainer->setID(pageIdList[i]);
+            pageContainer->setPosition({5.75f, 0});
+            m_pageContainer->addChild(pageContainer);
+            m_pages->addObject(pageContainer);
+            pageContainer->setVisible(m_pages->count() == 1);
+        }
+    }
+
+    m_totalPages = 21 - disabledSettings;
 
     bool disableArrows = false;
 
-    if (! (showStarPage || showMoonPage || showSecretCoinPage || showUserCoinPage || showDiamondPage || showJumpPage
-        || showAttemptPage || showDestroyedPlayerPage || showFriendPage || showFollowCreatorPage || showLikeDislikePage
-        || showRateStarsPage || showInsanePage || showDemonPage && showOnlinePage || showDailyPage || showMapPackPage
-        || showGauntletPage || showMostLikedPage || showRatedLevelPage))  {
+    if (m_totalPages == 0)  {
 
-        auto disableText = CCLabelBMFont::create("You have disabled every page in the mod. Please enable a page to see something.", "bigFont-uhd.fnt");
+        auto disableText = CCLabelBMFont::create("You have disabled every page in the mod. Please enable a page.", "bigFont-uhd.fnt");
         disableText->setScale(0.3f);
         disableText->setPosition({233, 130});
         m_pageContainer->addChild(disableText);
         disableArrows = true;
-    }
-
-
-    if (showStarPage) {
-        
-        UnlockPage* starPage = new UnlockPage(this, util->starUnlockDataList, "stars_spr.png"_spr);
-        CCNode* starPageContainer = starPage->createPage(util->m_playerStats.stars);
-        starPageContainer->setID("Stars-Progression");
-        starPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(starPageContainer);
-        m_pages->addObject(starPageContainer);
-        starPageContainer->setVisible(true);
-    }
-
-    if (showMoonPage) {
-
-        UnlockPage* moonPage = new UnlockPage(this, util->moonUnlockDataList, "moons_spr.png"_spr);
-        CCNode* moonPageContainer = moonPage->createPage(util->m_playerStats.moons);
-        moonPageContainer->setID("Moons-Progression");
-        moonPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(moonPageContainer);
-        m_pages->addObject(moonPageContainer);
-        moonPageContainer->setVisible(false);
-    }
-
-
-    if (showSecretCoinPage) {
-
-        UnlockPage* secretCoinsPage = new UnlockPage(this, util->secretCoinUnlockDataList, "secret_coins_spr.png"_spr);
-        CCNode* secretCoinsPageContainer = secretCoinsPage->createPage(util->m_playerStats.secretCoins);
-        secretCoinsPageContainer->setID("Secret-Coin-Progression");
-        secretCoinsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(secretCoinsPageContainer);
-        m_pages->addObject(secretCoinsPageContainer);
-        secretCoinsPageContainer->setVisible(false);
-    }
-
-    if (showUserCoinPage) {
-
-        UnlockPage* userCoinsPage = new UnlockPage(this, util->userCoinUnlockDataList, "user_coins_spr.png"_spr);
-        CCNode* userCoinsPageContainer = userCoinsPage->createPage(util->m_playerStats.userCoins);
-        userCoinsPageContainer->setID("User-Coin-Progression");
-        userCoinsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(userCoinsPageContainer);
-        m_pages->addObject(userCoinsPageContainer);
-        userCoinsPageContainer->setVisible(false);
-    }
-
-
-    if (showDiamondPage) {
-
-        UnlockPage* diamondsPage = new UnlockPage(this, util->diamondUnlockDataList, "diamonds_spr.png"_spr);
-        CCNode* diamondsPageContainer = diamondsPage->createPage(util->m_playerStats.diamonds);
-        diamondsPageContainer->setID("Diamond-Progression");
-        diamondsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(diamondsPageContainer);
-        m_pages->addObject(diamondsPageContainer);
-        diamondsPageContainer->setVisible(false);
-    }
-
-    if (showJumpPage) {
-
-        UnlockPage* jumpPage = new UnlockPage(this, util->jumpsUnlockDataList, "jumps_spr.png"_spr);
-        CCNode* jumpPageContainer = jumpPage->createPage(util->m_playerStats.jumps);
-        jumpPageContainer->setID("Jump-Progression");
-        jumpPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(jumpPageContainer);
-        m_pages->addObject(jumpPageContainer);
-        jumpPageContainer->setVisible(false);
-    }
-
-    if (showAttemptPage) {
-
-        UnlockPage* attemptPage = new UnlockPage(this, util->attemptsUnlockDataList, "attempts_spr.png"_spr);
-        CCNode* attemptPageContainer = attemptPage->createPage(util->m_playerStats.attempts);
-        attemptPageContainer->setID("Attempt-Progression");
-        attemptPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(attemptPageContainer);
-        m_pages->addObject(attemptPageContainer);
-        attemptPageContainer->setVisible(false);
-    }
-
-    if (showDestroyedPlayerPage) {
-
-        UnlockPage* destroyedPlayersPage = new UnlockPage(this, util->destroyedPlayersUnlockDataList, "destroyed_players_spr.png"_spr);
-        CCNode* destroyedPlayersPageContainer = destroyedPlayersPage->createPage(util->m_playerStats.destoryedPlayers);
-        destroyedPlayersPageContainer->setID("Destroyed-Players-Progression");
-        destroyedPlayersPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(destroyedPlayersPageContainer);
-        m_pages->addObject(destroyedPlayersPageContainer);
-        destroyedPlayersPageContainer->setVisible(false);
-    }
-
-    if (showFriendPage) {
-
-        UnlockPage* friendsPage = new UnlockPage(this, util->friendsUnlockDataList, "friends_spr.png"_spr);
-        CCNode* friendsPageContainer = friendsPage->createPage(util->m_playerStats.friends);
-        friendsPageContainer->setID("Friend-Progression");
-        friendsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(friendsPageContainer);
-        m_pages->addObject(friendsPageContainer);
-        friendsPageContainer->setVisible(false);
-    }
-
-    if (showFollowCreatorPage) {
-
-        UnlockPage* followCreatorsPage = new UnlockPage(this, util->followCreatorsUnlockDataList, "follow_creators_spr.png"_spr);
-        CCNode* followCreatorsPageContainer = followCreatorsPage->createPage(util->m_playerStats.followedCreators);
-        followCreatorsPageContainer->setID("Followed-Creators-Progression");
-        followCreatorsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(followCreatorsPageContainer);
-        m_pages->addObject(followCreatorsPageContainer);
-        followCreatorsPageContainer->setVisible(false);
-    }
-
-
-    if (showLikeDislikePage) {
-
-        UnlockPage* likeDislikeLevelsPage = new UnlockPage(this, util->likeDislikeUnlockDataList, "like_dislike_spr.png"_spr);
-        CCNode* likeDislikeLevelsPageContainer = likeDislikeLevelsPage->createPage(util->m_playerStats.likesAndDislikes);
-        likeDislikeLevelsPageContainer->setID("Like-Dislike-Progression");
-        likeDislikeLevelsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(likeDislikeLevelsPageContainer);
-        m_pages->addObject(likeDislikeLevelsPageContainer);
-        likeDislikeLevelsPageContainer->setVisible(false);
-    }
-
-    if (showRateStarsPage) {
-
-        UnlockPage* rateStarsOfLevelsPage = new UnlockPage(this, util->rateStarsUnlockDataList, "rate_stars_spr.png"_spr);
-        CCNode* rateStarsOfLevelsPageContainer = rateStarsOfLevelsPage->createPage(util->m_playerStats.rateStarsOnLevels);
-        rateStarsOfLevelsPageContainer->setID("Rate-Stars-Progression");
-        rateStarsOfLevelsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(rateStarsOfLevelsPageContainer);
-        m_pages->addObject(rateStarsOfLevelsPageContainer);
-        rateStarsOfLevelsPageContainer->setVisible(false);
-    }
-
-    if (showInsanePage) {
-
-        UnlockPage* insaneLevelsPage = new UnlockPage(this, util->completedInsaneUnlockDataList, "completed_insanes_spr.png"_spr);
-        CCNode* insaneLevelsPageContainer = insaneLevelsPage->createPage(util->m_playerStats.completedInsanes);
-        insaneLevelsPageContainer->setID("Completed-Insanes-Progression");
-        insaneLevelsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(insaneLevelsPageContainer);
-        m_pages->addObject(insaneLevelsPageContainer);
-        insaneLevelsPageContainer->setVisible(false);
-    }
-
-    if (showDemonPage) {
-
-        UnlockPage* demonLevelsPage = new UnlockPage(this, util->completedDemonUnlockDataList, "completed_demons_spr.png"_spr);
-        CCNode* demonLevelsPageContainer = demonLevelsPage->createPage(util->m_playerStats.completedDemons);
-        demonLevelsPageContainer->setID("Completed-Demons-Progression");
-        demonLevelsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(demonLevelsPageContainer);
-        m_pages->addObject(demonLevelsPageContainer);
-        demonLevelsPageContainer->setVisible(false);
-    }
-
-    if (showOnlinePage) {
-
-        UnlockPage* completedOnlineLevelsPage = new UnlockPage(this, util->completedOnlineUnlockDataList, "completed_online_spr.png"_spr);
-        CCNode* completedOnlineLevelsPageContainer = completedOnlineLevelsPage->createPage(util->m_playerStats.completedOnline);
-        completedOnlineLevelsPageContainer->setID("Completed-Online-Progression");
-        completedOnlineLevelsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(completedOnlineLevelsPageContainer);
-        m_pages->addObject(completedOnlineLevelsPageContainer);
-        completedOnlineLevelsPageContainer->setVisible(false);
-    }
-
-    if (showDailyPage) {
-
-        UnlockPage* completedDailyLevelsPage = new UnlockPage(this, util->completedDailyUnlockDataList, "completed_daily_spr.png"_spr);
-        CCNode* completedDailyLevelsPageContainer = completedDailyLevelsPage->createPage(util->m_playerStats.completedDaily);
-        completedDailyLevelsPageContainer->setID("Completed-Daily-Progression");
-        completedDailyLevelsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(completedDailyLevelsPageContainer);
-        m_pages->addObject(completedDailyLevelsPageContainer);
-        completedDailyLevelsPageContainer->setVisible(false);
-    }
-
-
-    if (showMapPackPage) {
-
-        UnlockPage* completedMapPacksPage = new UnlockPage(this, util->completedMapPacksUnlockDataList, "completed_map_packs_spr.png"_spr);
-        CCNode* completedMapPacksPageContainer = completedMapPacksPage->createPage(util->m_playerStats.completedMapPacks);
-        completedMapPacksPageContainer->setID("Completed-Map-Packs-Progression");
-        completedMapPacksPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(completedMapPacksPageContainer);
-        m_pages->addObject(completedMapPacksPageContainer);
-        completedMapPacksPageContainer->setVisible(false);
-    }
-
-    if (showGauntletPage) {
-
-        UnlockPage* completedGauntletsPage = new UnlockPage(this, util->completedGauntletsUnlockDataList, "completed_gauntlets_spr.png"_spr);
-        CCNode* completedGauntletsPageContainer = completedGauntletsPage->createPage(util->m_playerStats.completedGauntlets);
-        completedGauntletsPageContainer->setID("Completed-Gauntlets-Progression");
-        completedGauntletsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(completedGauntletsPageContainer);
-        m_pages->addObject(completedGauntletsPageContainer);
-        completedGauntletsPageContainer->setVisible(false);
-    }
-
-    if (showListPage) {
-
-        UnlockPage* completedListsPage = new UnlockPage(this, util->completedListsUnlockDataList, "completed_lists_spr.png"_spr);
-        CCNode* completedListsPageContainer = completedListsPage->createPage(util->m_playerStats.completedLists);
-        completedListsPageContainer->setID("Completed-Lists-Progression");
-        completedListsPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(completedListsPageContainer);
-        m_pages->addObject(completedListsPageContainer);
-        completedListsPageContainer->setVisible(false);
-    }
-
-    if (showMostLikedPage) {
-
-        UnlockPage* likesOnYourLevelPage = new UnlockPage(this, util->likesOnYourLevelUnlockDataList, "most_liked_spr.png"_spr);
-        CCNode* likesOnYourLevelPageContainer = likesOnYourLevelPage->createPage(util->m_playerStats.maxLikes);
-        likesOnYourLevelPageContainer->setID("Most-Liked-Progression");
-        likesOnYourLevelPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(likesOnYourLevelPageContainer);
-        m_pages->addObject(likesOnYourLevelPageContainer);
-        likesOnYourLevelPageContainer->setVisible(false);
-    }
-
-    if (showRatedLevelPage) {
-
-        UnlockPage* ratedLevelPage = new UnlockPage(this, util->creatorPointsUnlockDataList, "creator_points_spr.png"_spr);
-        CCNode* ratedLevelPageContainer = ratedLevelPage->createPage(util->m_playerStats.ratedLevels);
-        ratedLevelPageContainer->setID("Creator-Point-Progression");
-        ratedLevelPageContainer->setPosition({5.75f, 0});
-        m_pageContainer->addChild(ratedLevelPageContainer);
-        m_pages->addObject(ratedLevelPageContainer);
-        ratedLevelPageContainer->setVisible(false);
     }
 
     if (! disableArrows) {
@@ -538,17 +327,6 @@ void UnlockProgressionPopup::onNextPage(CCObject*) {
 
 void UnlockProgressionPopup::updatePageVisibility() {
 
-    /*
-        friends page isn't loaded initially because of retrival method
-        friend count requires a second call to get the real value
-        theres another way to fix this but lazy coding wins!
-        runtime is *slightly* worse because of this hotfix
-        I may fix this in the future
-    
-    if (m_playerStats.friends == -1 && showFriendPage) {
-        m_playerStats.friends = processFriends.fetchFriendCount();
-        friendsPage->updateFriendCount(m_playerStats.friends);
-    } */
     if (m_pages->count() == 0) {
         return;
     }

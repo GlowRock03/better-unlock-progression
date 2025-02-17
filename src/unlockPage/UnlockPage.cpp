@@ -220,7 +220,6 @@ void UnlockPage::refreshFriends(CCObject* sender) {
 void UnlockPage::refreshMaxLikes(CCObject* sender) {
 
     requestMostLiked(0);
-    makeInfoPopup("Your Most Liked Level");
 }
 
 void UnlockPage::refreshCreatorPoints(CCObject* sender) {
@@ -231,23 +230,50 @@ void UnlockPage::refreshCreatorPoints(CCObject* sender) {
 
 void UnlockPage::makeInfoPopup(std::string type) {
 
-    if (type.compare("Friends") != 0) {
-
-        FLAlertLayer::create(
-            "Refresh Complete",
-            fmt::format("Your '{}' statistic has been fetched via <cl>web requests</c>. <cr>DO NOT SPAM THIS BUTTON!</c> That will result in an <cr>API Rate Limit</c>.", type),
-            "Ok"
-        )->show();
-    } else {
+    if (type.compare("Friends") == 0) {
 
         FLAlertLayer::create(
             "Refreshing",
             "<co>If this is the first time you pressed this button</c>, <cy>press this button again</c>. Then your 'Friends' will be refreshed.",
             "Ok"
         )->show();
+    } else if (type.compare("Bad Response") == 0) {
+
+        FLAlertLayer::create(
+            "Web Request Failed",
+            "The <cl>web requests</c> <cr>FAILED</c>. Please check your internet connect.",
+            "Ok"
+        )->show();
+    } else if (type.compare("No Response") == 0) {
+
+        FLAlertLayer::create(
+            "Web Request Failed",
+            "The <cl>web requests</c> <cr>FAILED</c>. This is likely because you do not have any public levels.",
+            "Ok"
+        )->show();
+    } else if (type.compare("Unexpected") == 0) {
+
+        FLAlertLayer::create(
+            "Error",
+            "An unexpected error has occured. The <cl>web requests</c> has been <cr>CANCELLED</c>.",
+            "Ok"
+        )->show();
+    } else if (type.compare("Rate Limit") == 0) {  
+
+        FLAlertLayer::create(
+            "Rate Limit",
+            "You have been <cr>API Rate Limited</c>. Please try again later (~1 hour)",
+            "Ok"
+        )->show();
+    } else {
+
+        FLAlertLayer::create(
+            "Refresh Complete",
+            fmt::format("Your '{}' statistic has been fetched via <cl>web requests</c>. <cr>DO NOT SPAM THIS BUTTON!</c> That will result in an <cr>API Rate Limit</c>.", type),
+            "Ok"
+        )->show();
     }
 }
-
 
 int UnlockPage::processFriendCount() {
 
@@ -294,8 +320,20 @@ void UnlockPage::requestMostLiked(int page) {
             auto str = value->string().unwrap();
             log::info("Response for Page {}: {}", page, str);
 
-            if (str == "-1") {
+            if (str == "Curl failed: Couldn't resolve host name") {
+
                 log::warn("No levels found!");
+                makeInfoPopup("Bad Response");
+                return;
+            } else if (str == "-1") {
+
+                log::warn("No levels found!");
+                makeInfoPopup("No Response");
+                return;   
+            } else if (value->code() == 1015) {
+
+                log::warn("Rate Limit!");
+                makeInfoPopup("Rate Limit");
                 return;
             }
 
@@ -322,6 +360,8 @@ void UnlockPage::requestMostLiked(int page) {
                 Mod::get()->setSavedValue<int>(fmt::format("most-liked-{}", userId), maxLikes);
 
                 util->updatePage(maxLikes, pageNode, util->likesOnYourLevelUnlockDataList, iconSprName);
+
+                makeInfoPopup("Most Liked");
             }
 
         } else if (e->getProgress()) {
@@ -329,6 +369,7 @@ void UnlockPage::requestMostLiked(int page) {
 
         } else if (e->isCancelled()) {
             log::warn("Request for page {} was cancelled.", page);
+            makeInfoPopup("Unexpected");
         }
     });
 
@@ -392,6 +433,18 @@ void UnlockPage::requestCreatorPoints() {
             auto str = value->string().unwrap();        //I totally check this value before unwrapping :)
             log::info("Response: {}", str);
 
+            if (str == "Curl failed: Couldn't resolve host name") {
+
+                log::warn("No creator points found!");
+                makeInfoPopup("Bad Response");
+                return;
+            } else if (value->code() == 1015) {
+
+                log::warn("Rate Limit!");
+                makeInfoPopup("Rate Limit");
+                return;
+            }
+
             int creatorPoints = findCreatorPoints(str);
             log::info("Extracted Creator Points: {}", creatorPoints);
 
@@ -399,12 +452,13 @@ void UnlockPage::requestCreatorPoints() {
 
             util->updatePage(creatorPoints, pageNode, util->creatorPointsUnlockDataList, iconSprName);
 
+            makeInfoPopup("Creator Points");
+
         } else if (web::WebProgress* progress = e->getProgress()) {
             log::info("{}", "progress");
         } else if (e->isCancelled()) {
             log::info("{}", "fail");
-
-            //call ui update
+            makeInfoPopup("Unexpected");
         }
     });
 

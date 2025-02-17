@@ -15,5 +15,9 @@ void MyLevelDownloadDelegate::levelDownloadFailed(int id) {
 
     GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
     log::info("level failed to download, delegate complete");
-    //send ui update
+    FLAlertLayer::create(
+        "Rate Limit",
+        "Level download failed. Please try again later",
+        "Ok"
+    )->show();
 }
