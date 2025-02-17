@@ -409,7 +409,7 @@ void UnlockProgressionPopup::createNavigationButtons() {
     auto prevArrowSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
     prevArrowSpr->setID("Left-Arrow-Sprite");
     auto nextArrowSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
-    prevArrowSpr->setID("Right-Arrow-Sprite");
+    nextArrowSpr->setID("Right-Arrow-Sprite");
     nextArrowSpr->setFlipX(true);
 
     m_prevButton = CCMenuItemSpriteExtra::create(
@@ -417,7 +417,8 @@ void UnlockProgressionPopup::createNavigationButtons() {
         this,
         menu_selector(UnlockProgressionPopup::onPrevPage)
     );
-    m_prevButton->setPosition({winSize.width * -0.05f + 2, popupHeight * 0.5f});
+    //m_prevButton->setPosition({winSize.width * -0.05f + 2, popupHeight * 0.5f});
+    m_prevButton->setPosition({-26.45f, popupHeight * 0.5f});
     m_prevButton->setID("Left-Arrow-Button");
     m_buttonMenu->addChild(m_prevButton);
 
@@ -426,7 +427,10 @@ void UnlockProgressionPopup::createNavigationButtons() {
         this,
         menu_selector(UnlockProgressionPopup::onNextPage)
     );
-    m_nextButton->setPosition({winSize.width * 0.85f + 9.35f, popupHeight * 0.5f});
+    //-26.45f
+    //493
+    //m_nextButton->setPosition({winSize.width * 0.85f + 9.35f, popupHeight * 0.5f});
+    m_nextButton->setPosition({493, popupHeight * 0.5f});
     m_nextButton->setID("Right-Arrow-Button");
     m_buttonMenu->addChild(m_nextButton);
 }
@@ -434,11 +438,13 @@ void UnlockProgressionPopup::createNavigationButtons() {
 void UnlockProgressionPopup::createBottomNavigationButtons() {
 
     float popupHeight = 256;
+    auto winSize = CCDirector::sharedDirector()->getWinSize();
+    log::info("width: {}", winSize.width);
 
     auto bgSpr = CCSprite::createWithSpriteFrameName("whiteSquare20_001.png");
     bgSpr->setID("Dim-Sprite");
-    bgSpr->setPosition({285, 150});
-    bgSpr->setScale(200.f);
+    bgSpr->setPosition({winSize.width / 2, 150});
+    bgSpr->setScale(500.f);
     bgSpr->setZOrder(-10);
     bgSpr->setOpacity(100);
     bgSpr->setColor(ccc3(0, 0, 0));
@@ -461,9 +467,6 @@ void UnlockProgressionPopup::createBottomNavigationButtons() {
     const float spacing = 24;
 
     float totalWidth = m_totalPages * spacing;
-
-    //auto winSize = CCDirector::sharedDirector()->getWinSize();
-    //log::info("width: {}", winSize.width);
 
     //float offset = (float) winSize.width / -11.1568f;
 

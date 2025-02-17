@@ -153,27 +153,23 @@ void UnlockPage::createRefreshButton() {
         CCSprite* supportSpr = CCSprite::createWithSpriteFrameName("GJ_plainBtn_001.png");
         supportSpr->setID("Support-Plain-Sprite");
         supportSpr->setScale(0.99f);
-        supportSpr->setRotation(270.f);
 
         CCSprite* supportLikeSpr = CCSprite::createWithSpriteFrameName("GJ_likesIcon_001.png");
         supportLikeSpr->setID("Support-Like-Sprite");
-        supportLikeSpr->setPosition({33, 24});
+        supportLikeSpr->setPosition({23.5f, 31});
         supportLikeSpr->setScale(0.7f);
-        supportLikeSpr->setRotation(90.f);
         supportSpr->addChild(supportLikeSpr);
 
         auto supportText1 = CCLabelBMFont::create("Support", "bigFont-uhd.fnt");
         supportText1->setID("Support-Test-1");
-        supportText1->setPosition({21, 24});
+        supportText1->setPosition({23.5f, 19});
         supportText1->setScale(0.225f);
-        supportText1->setRotation(90.f);
         supportSpr->addChild(supportText1);
 
         auto supportText2 = CCLabelBMFont::create("Me", "bigFont-uhd.fnt");
         supportText2->setID("Support-Test-2");
-        supportText2->setPosition({14, 23.75f});
+        supportText2->setPosition({23.5f, 12});
         supportText2->setScale(0.225f);
-        supportText2->setRotation(90.f);
         supportSpr->addChild(supportText2);
 
         refreshButton = CCMenuItemSpriteExtra::create(
