@@ -8,7 +8,7 @@
 	},
 	"id": "glowrock.better_unlock_progression",
 	"name": "Better Unlock Progression",
-	"version": "v1.0.1",
+	"version": "v1.1.0",
 	"developer": "GlowRock",
 	"description": "Progression Menu for Unlockables!",
     "tags": ["enhancement", "interface"],
@@ -150,9 +150,14 @@
 		"sprites": [
 			"resources/*.png"
 		],
-        "files": [
-            "resources/levels_data.json"
-        ]
+        "spritesheets": {
+            "TitleSheet": [
+                "resources/titleSpriteSheet/*.png"
+            ],
+            "MiscSpriteSheet": [
+                "resources/miscSpriteSheet/*.png"
+            ]
+        }
     },
     "links": {
         "source": "https://github.com/GlowRock03/better-unlock-progression",

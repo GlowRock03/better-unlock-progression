@@ -1,6 +1,6 @@
 #include <Geode/Geode.hpp>
 
-#include "UnlockProgressionPopup.cpp"
+#include "unlockProgressionPopup/UnlockProgressionPopup.hpp"
 
 using namespace geode::prelude;
 
@@ -14,7 +14,7 @@ class $modify(MyGJGarageLayer, GJGarageLayer) {
 		}
 
         auto myButton = CCMenuItemSpriteExtra::create(
-			CCSprite::create("mod_button.png"_spr),
+			CCSprite::createWithSpriteFrameName("modButton.png"_spr),
 			this,
 			menu_selector(MyGJGarageLayer::onMyButton)
 		);
@@ -30,6 +30,8 @@ class $modify(MyGJGarageLayer, GJGarageLayer) {
 	void onMyButton(CCObject*) {
 
 		auto popup = UnlockProgressionPopup::create("Icon progression");
+		popup->setID("Better-Unlock-Progression"_spr);
+		popup->setZOrder(95);
 		if (popup) {
 			
 			popup->show();
