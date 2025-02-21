@@ -13,18 +13,18 @@ BasePage::BasePage(FLAlertLayer* parentPopup) {
     tierPages->retain();
     currentPage = 0;
     
-    page1Selected = CCSprite::create("GJ_square03-uhd.png");
-    page2Selected = CCSprite::create("GJ_square03-uhd.png");
+    page1Selected = CCSprite::create("GJ_square03.png");
+    page2Selected = CCSprite::create("GJ_square03.png");
     page2Selected->setVisible(false);
-    page3Selected = CCSprite::create("GJ_square03-uhd.png");
+    page3Selected = CCSprite::create("GJ_square03.png");
     page3Selected->setVisible(false);
-    page4Selected = CCSprite::create("GJ_square03-uhd.png");
+    page4Selected = CCSprite::create("GJ_square03.png");
     page4Selected->setVisible(false);
-    page1Deselected = CCSprite::create("GJ_square01-uhd.png");
+    page1Deselected = CCSprite::create("GJ_square01.png");
     page1Deselected->setVisible(false);
-    page2Deselected = CCSprite::create("GJ_square01-uhd.png");
-    page3Deselected = CCSprite::create("GJ_square01-uhd.png");
-    page4Deselected = CCSprite::create("GJ_square01-uhd.png");
+    page2Deselected = CCSprite::create("GJ_square01.png");
+    page3Deselected = CCSprite::create("GJ_square01.png");
+    page4Deselected = CCSprite::create("GJ_square01.png");
 }
 
 BasePage::~BasePage() {

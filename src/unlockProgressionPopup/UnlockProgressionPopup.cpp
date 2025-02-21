@@ -114,7 +114,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
     if (m_totalPages == 0)  {
 
-        auto disableText = CCLabelBMFont::create("You have disabled every page in the mod. Please enable a page.", "bigFont-uhd.fnt");
+        auto disableText = CCLabelBMFont::create("You have disabled every page in the mod. Please enable a page.", "bigFont.fnt");
         disableText->setScale(0.3f);
         disableText->setPosition({233, 130});
         m_pageContainer->addChild(disableText);
@@ -142,7 +142,7 @@ void UnlockProgressionPopup::createBackgroundUI() {
     titleSpr->setScale(.4f);
     m_buttonMenu->addChild(titleSpr);
     
-    auto creatorTitle = CCLabelBMFont::create("By GlowRock", "goldFont-uhd.fnt");
+    auto creatorTitle = CCLabelBMFont::create("By GlowRock", "goldFont.fnt");
     creatorTitle->setID("Water-Mark-Label");
     creatorTitle->setScale(.4f);
     auto creatorTitleButton = CCMenuItemSpriteExtra::create(

@@ -780,13 +780,13 @@ bool Utilities::placeUnlockable(CCObject* object, int value, CCLabelBMFont* curr
 
     auto sliderOutlineSpr = CCSprite::createWithSpriteFrameName("progressOutline.png"_spr);
     sliderOutlineSpr->setID("Progress-Outline");
-    auto sliderBarSpr = togglePlayerColours ? CCSprite::create("sliderBar2-uhd.png") : CCSprite::create("sliderBar-uhd.png");
+    auto sliderBarSpr = togglePlayerColours ? CCSprite::create("sliderBar2.png") : CCSprite::create("sliderBar.png");
     sliderBarSpr->setID("Slider-Bar");
     sliderBarSpr->setUserObject(CCFloat::create(sliderBarSpr->getContentSize().width));
     float ratio = (float)(value - std::stoi(previousUnlockData->numberString)) / (float)(std::stoi(currentUnlockData->numberString) - std::stoi(previousUnlockData->numberString));
     float scale = ratio >= 0.98f ? sliderBarSpr->getContentSize().width * 0.98f : sliderBarSpr->getContentSize().width * ratio;
     sliderBarSpr->setTextureRect(CCRectMake(0, 0, scale, sliderBarSpr->getContentSize().height));
-    auto unlockText = CCLabelBMFont::create(Utilities::addCommas(currentUnlockData->numberString.c_str()), "bigFont-uhd.fnt");
+    auto unlockText = CCLabelBMFont::create(Utilities::addCommas(currentUnlockData->numberString.c_str()), "bigFont.fnt");
     unlockText->setID("Unlock-Text");
     auto lock = CCSprite::createWithSpriteFrameName("GJ_lockGray_001.png");
     lock->setID("Lock");

@@ -51,7 +51,7 @@ CCNode* UnlockPage::createTier(int tier, int value) {
     /* Tier's Content */
 
     /* Moving Progress Text */
-    auto currentProgressText = CCLabelBMFont::create("", "bigFont-uhd.fnt");
+    auto currentProgressText = CCLabelBMFont::create("", "bigFont.fnt");
     currentProgressText->setScale(0.35f);
     currentProgressText->setID("Progress-Text");
 
@@ -160,13 +160,13 @@ void UnlockPage::createRefreshButton() {
         supportLikeSpr->setScale(0.7f);
         supportSpr->addChild(supportLikeSpr);
 
-        auto supportText1 = CCLabelBMFont::create("Support", "bigFont-uhd.fnt");
+        auto supportText1 = CCLabelBMFont::create("Support", "bigFont.fnt");
         supportText1->setID("Support-Test-1");
         supportText1->setPosition({23.5f, 19});
         supportText1->setScale(0.225f);
         supportSpr->addChild(supportText1);
 
-        auto supportText2 = CCLabelBMFont::create("Me", "bigFont-uhd.fnt");
+        auto supportText2 = CCLabelBMFont::create("Me", "bigFont.fnt");
         supportText2->setID("Support-Test-2");
         supportText2->setPosition({23.5f, 12});
         supportText2->setScale(0.225f);
