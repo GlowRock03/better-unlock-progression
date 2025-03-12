@@ -141,6 +141,7 @@ void UnlockPage::createRefreshButton() {
 
     CCMenuItemSpriteExtra* refreshButton;
     CCMenuItemSpriteExtra* supportMeButton;
+    CCLabelBMFont* refreshText = CCLabelBMFont::create("Refresh", "bigFont.fnt");
     if (std::string(iconSprName).compare("friends_spr.png"_spr) == 0) {
 
         refreshButton = CCMenuItemSpriteExtra::create(
@@ -195,11 +196,15 @@ void UnlockPage::createRefreshButton() {
             menu_selector(UnlockPage::refreshCreatorPoints)
         );
     }
-
+    refreshText->setID("Refresh-Text");
+    refreshText->setAnchorPoint({.5f, .5f});
+    refreshText->setScale({.4f});
+    refreshText->setPosition({270, 275});
     refreshButton->setID("Refresh-Button");
     refreshButton->setAnchorPoint({.5f, .5f});
     refreshButton->setPosition({270, 245});
 
+    buttonMenu->addChild(refreshText);
     buttonMenu->addChild(refreshButton);
 }
 
@@ -225,7 +230,6 @@ void UnlockPage::refreshMaxLikes(CCObject* sender) {
 void UnlockPage::refreshCreatorPoints(CCObject* sender) {
 
     requestCreatorPoints();
-    makeInfoPopup("Creator Points");
 }
 
 void UnlockPage::makeInfoPopup(std::string type) {

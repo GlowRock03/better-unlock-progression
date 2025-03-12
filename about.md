@@ -1,12 +1,12 @@
 # Better Unlock Progression
 
-A menu for unlock statistics that require 'grinding' to achieve them
+A dedicated menu that tracks your progress toward unlockable icons requiring grinding.
 
-This mod shows you how close you are to unlocking the next icon, (hopefully) increasing your motivation to grind more statistics
+This mod helps you stay motivated by showing exactly how close you are to your next unlock, making the grind feel more rewarding. This mod could also help you identify unlocks that you were not aware of before!
 
 ------
 
-## Full Progress Pages
+## Included Progress Pages
 
  * Stars
  * Moons
@@ -32,7 +32,7 @@ This mod shows you how close you are to unlocking the next icon, (hopefully) inc
 
 ## Not Included
 
-These statistics already have their own menu, so there is no point in readding the progression again:
+These statistics already have their own menu, so there is no need for readding their progressions again:
 
  * All Shards
  * All Paths

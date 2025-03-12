@@ -1,9 +1,13 @@
 # Better Unlock Progression Changelog
+## v1.1.2
+- Added text for the refresh buttons
+- Added new mod sprites (kept legacy sprite as a setting)
+- Changed about.md
+- Minor bug fixes
 ## v1.1.1
 - Fixed Android crashes (bad texture loading)
 - Fixed sprites appearing too enlarged
 ## v1.1.0
-- Added Files
 - Optimized code
 - Fixed loading sequence
 - Changed all Sprites to a Spritesheet
