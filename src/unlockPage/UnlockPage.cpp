@@ -198,7 +198,7 @@ void UnlockPage::createRefreshButton() {
     }
     refreshText->setID("Refresh-Text");
     refreshText->setAnchorPoint({.5f, .5f});
-    refreshText->setScale({.4f});
+    refreshText->setScale(.4f);
     refreshText->setPosition({270, 275});
     refreshButton->setID("Refresh-Button");
     refreshButton->setAnchorPoint({.5f, .5f});
