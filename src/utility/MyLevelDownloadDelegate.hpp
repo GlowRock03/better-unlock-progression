@@ -9,8 +9,8 @@
 
 using namespace geode::prelude;
 
-#include <Geode/binding/LevelDownloadDelegate.hpp>
-class MyLevelDownloadDelegate : public LevelDownloadDelegate {
+#include <Geode/binding/LevelManagerDelegate.hpp>
+class MyLevelDownloadDelegate : public LevelManagerDelegate {
 private:
 
     int id = 114471227;
@@ -22,8 +22,8 @@ public:
         return &instance;
     }
 
-    void levelDownloadFinished(GJGameLevel* level) override;
-    void levelDownloadFailed(int id) override;
+    void loadLevelsFinished(CCArray* levels, const char* key, int) override;
+    void loadLevelsFailed(const char* key, int) override;
 };
 
 #endif

@@ -211,8 +211,8 @@ void UnlockPage::createRefreshButton() {
 void UnlockPage::openSupportMeLevel(CCObject* sender) {
 
     int id = 114471227;
-    GameLevelManager::sharedState()->downloadLevel(id, false);
-    GameLevelManager::get()->m_levelDownloadDelegate = MyLevelDownloadDelegate::get();
+    GameLevelManager::get()->m_levelManagerDelegate = MyLevelDownloadDelegate::get();
+    GameLevelManager::sharedState()->getOnlineLevels(GJSearchObject::create(SearchType::Search, std::to_string(id)));
 }
 
 void UnlockPage::refreshFriends(CCObject* sender) {

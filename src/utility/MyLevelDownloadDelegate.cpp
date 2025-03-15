@@ -1,19 +1,20 @@
 #include "MyLevelDownloadDelegate.hpp"
 
-void MyLevelDownloadDelegate::levelDownloadFinished(GJGameLevel* level) {
-
-    GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
+void MyLevelDownloadDelegate::loadLevelsFinished(CCArray* levels, const char* key, int) {
+    if (levels->count() < 1) {
+        loadLevelsFailed(key, 0);
+        return;
+    }
+    GameLevelManager::get()->m_levelManagerDelegate = nullptr;
     log::info("level downloaded, delegate complete");
     //level = GameLevelManager::sharedState()->getSavedLevel(id);
-    auto levelLayer = LevelInfoLayer::create(level, false);
-    auto scene = CCScene::create();
-    scene->addChild(levelLayer);
-    CCDirector::sharedDirector()->pushScene(CCTransitionFade::create(0.5, scene));
+    auto levelLayer = LevelInfoLayer::scene(static_cast<GJGameLevel*>(levels->objectAtIndex(0)), false);
+    CCDirector::sharedDirector()->pushScene(CCTransitionFade::create(0.5, levelLayer));
 }
 
-void MyLevelDownloadDelegate::levelDownloadFailed(int id) {
+void MyLevelDownloadDelegate::loadLevelsFailed(const char* key, int) {
 
-    GameLevelManager::get()->m_levelDownloadDelegate = nullptr;
+    GameLevelManager::get()->m_levelManagerDelegate = nullptr;
     log::info("level failed to download, delegate complete");
     FLAlertLayer::create(
         "Rate Limit",
