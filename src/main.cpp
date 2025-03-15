@@ -13,8 +13,11 @@ class $modify(MyGJGarageLayer, GJGarageLayer) {
 			return false;
 		}
 
+		bool toggleLegacySprite = Mod::get()->getSettingValue<bool>("toggle-legacy-sprite");
+		auto modSprite = toggleLegacySprite ? CCSprite::createWithSpriteFrameName("modButton.png"_spr) : CCSprite::createWithSpriteFrameName("modButtonNew.png"_spr);
+
         auto myButton = CCMenuItemSpriteExtra::create(
-			CCSprite::createWithSpriteFrameName("modButton.png"_spr),
+			modSprite,
 			this,
 			menu_selector(MyGJGarageLayer::onMyButton)
 		);

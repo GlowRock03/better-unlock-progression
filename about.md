@@ -1,48 +1,50 @@
-# Better Unlock Progression
+# <cj>Better Unlock Progression</c>
 
-A dedicated menu that tracks your progress toward unlockable icons requiring grinding.
+<cy>A dedicated menu</c> that <cl>tracks your progress toward unlockable icons</c> requiring grinding.
 
-This mod helps you stay motivated by showing exactly how close you are to your next unlock, making the grind feel more rewarding. This mod could also help you identify unlocks that you were not aware of before!
+This mod helps you stay motivated by showing exactly how close you are to your next unlock, <cy>making the grind feel more rewarding.</c> This mod could also help you identify unlocks that you were not aware of before!
+
+Go to the <cg>Garage (Icon Select) Menu</c> to find the mod button on the left side!
 
 ------
 
 ## Included Progress Pages
 
- * Stars
- * Moons
- * Secret Coins
- * User Coins
- * Diamonds
- * Jumps
- * Attempts
- * Destroyed Players
- * Friends
- * Follow Creators
- * Like/Dislike Online Levels
- * Rate the Stars of Online Levels
- * Completed Insane Levels
- * Completed Demon Levels
- * Completed Online Levels
- * Completed Daily Levels
- * Completed Map Packs
- * Completed Gauntlets
- * Completed Lists
- * Most Likes on Your Level
- * Your Rated Levels
+* <cy>Stars</c>
+* <cj>Moons</c>
+* <cy>Secret Coins</c>
+* <cl>User Coins</c>
+* <cb>Diamonds</c>
+* <cy>Jumps</c>
+* <cr>Attempts</c>
+* <cr>Destroyed Players</c>
+* <cp>Friends</c>
+* <cr>Follow Creators</c>
+* <cy>Like/Dislike Online Levels</c>
+* <cy>Rate the Stars of Online Levels</c>
+* <cb>Completed Insane Levels</c>
+* <cr>Completed Demon Levels</c>
+* <cj>Completed Online Levels</c>
+* <cy>Completed Daily Levels</c>
+* <co>Completed Map Packs</c>
+* <co>Completed Gauntlets</c>
+* <cy>Completed Lists</c>
+* <cj>Most Likes on Your Level</c>
+* <cj>Your Rated Levels</c>
 
-## Not Included
+## <cr>Not Included</c>
 
 These statistics already have their own menu, so there is no need for readding their progressions again:
 
- * All Shards
- * All Paths
+ * <cr>All Shards</c>
+ * <cr>All Paths</c>
 
  ------
 
-## Issues
+## <cr>Issues</c>
 
-If you encounter any bugs and/or crashes, please tag me in the Geode Discord server when you submit a bug report or DM me on Discord (@GlowRock).
+If you encounter any bugs and/or crashes, please tag me in the <cb>Geode Discord Server</c> when you submit a bug report or DM me on Discord (<cp>@GlowRock</c>).
 
-## Additional Notes
+## <cg>Additional Notes</c>
 
-This is my first Geode mod, and a bigger one at that. Really enjoyed working on this! Enjoy the mod!
+This is my first <cy>Geode</c> mod, and a bigger one at that. Really enjoyed working on this! <cp>Enjoy the mod!</c>
