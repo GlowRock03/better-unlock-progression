@@ -1,4 +1,8 @@
 # Better Unlock Progression Changelog
+## v1.1.4
+- Fixed Shadow on Mod Menu Button in the Garage
+## v1.1.3
+- Removed bug on level download on Support Me button
 ## v1.1.2
 - Added text for the refresh buttons
 - Added new mod sprites (kept legacy sprite as a setting)
