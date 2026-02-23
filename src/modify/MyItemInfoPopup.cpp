@@ -24,7 +24,7 @@ void MyItemInfoPopup::applyCustomizations() {
     for (int i = 0; i < children->count(); ++i) {
 
         auto child = children->objectAtIndex(i);
-        auto simplePlayer = dynamic_cast<SimplePlayer*>(child);
+        auto simplePlayer = typeinfo_cast<SimplePlayer*>(child);
         if (simplePlayer) {
 
             bool togglePlayerColors = Mod::get()->getSettingValue<bool>("toggle-player-colors");

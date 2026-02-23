@@ -539,7 +539,7 @@ const char* Utilities::addCommas(const char* number) {
 void Utilities::openUnlockInfo(CCObject* sender) {
 
     auto button = static_cast<CCMenuItemSpriteExtra*>(sender);
-    auto unlockInfo = dynamic_cast<UnlockInfo*>(button->getUserObject());
+    auto unlockInfo = typeinfo_cast<UnlockInfo*>(button->getUserObject());
 
     if (unlockInfo->colorType.empty()) {
         auto popup = MyItemInfoPopup::createWithCustomizations(
@@ -944,10 +944,10 @@ void Utilities::updatePage(int newValue, CCNode* pageNode, std::vector<UnlockDat
         for (auto node : CCArrayExt<CCNode*>(tierNode->getChildren())) {
 
             // Progress bar
-            if (auto sliderBar = dynamic_cast<CCSprite*>(node)) {
+            if (auto sliderBar = typeinfo_cast<CCSprite*>(node)) {
                 if (sliderBar->getID() == "Slider-Bar") {
 
-                    auto originalWidthObj = dynamic_cast<CCFloat*>(sliderBar->getUserObject());
+                    auto originalWidthObj = typeinfo_cast<CCFloat*>(sliderBar->getUserObject());
                     float originalWidth = originalWidthObj->getValue();
 
                     float scale = ratioList[unlockIndex] >= 0.98f ? originalWidth * 0.98f : originalWidth * ratioList[unlockIndex];
@@ -956,7 +956,7 @@ void Utilities::updatePage(int newValue, CCNode* pageNode, std::vector<UnlockDat
             }
 
             // Progress text
-            if (auto progressText = dynamic_cast<CCLabelBMFont*>(node)) {
+            if (auto progressText = typeinfo_cast<CCLabelBMFont*>(node)) {
                 if (progressText->getID() == "Progress-Text") {
 
                     bool progressPlaced = false;
@@ -985,12 +985,12 @@ void Utilities::updatePage(int newValue, CCNode* pageNode, std::vector<UnlockDat
             }
 
             // Unlock icons
-            if (auto buttonMenu = dynamic_cast<CCMenu*>(node)) {
+            if (auto buttonMenu = typeinfo_cast<CCMenu*>(node)) {
 
                 int lockCount = 0;
                 for (auto unlockButtonObj : CCArrayExt<CCNode*>(buttonMenu->getChildren())) {
 
-                    auto unlockButton = dynamic_cast<CCMenuItemSpriteExtra*>(unlockButtonObj);
+                    auto unlockButton = typeinfo_cast<CCMenuItemSpriteExtra*>(unlockButtonObj);
                     if (!unlockButton) continue;
 
                     auto unlockInfo = static_cast<UnlockInfo*>(unlockButton->getUserObject());
@@ -1002,7 +1002,7 @@ void Utilities::updatePage(int newValue, CCNode* pageNode, std::vector<UnlockDat
                         int unlockValue = std::stoi(unlockList[lockCount]->numberString);
 
                         auto unlockFunc = [&](CCNode* iconNode) {
-                            if (auto icon = dynamic_cast<SimplePlayer*>(iconNode)) {
+                            if (auto icon = typeinfo_cast<SimplePlayer*>(iconNode)) {
                                 if (newValue >= unlockValue) {
                                     icon->setColors(gameManager->colorForIdx(gameManager->getPlayerColor()), gameManager->colorForIdx(gameManager->getPlayerColor2()));
                                     if (gameManager->m_playerGlow)
@@ -1013,19 +1013,19 @@ void Utilities::updatePage(int newValue, CCNode* pageNode, std::vector<UnlockDat
                                 }
 
                                 for (auto inner : CCArrayExt<CCNode*>(icon->getChildren())) {
-                                    if (auto sprite = dynamic_cast<CCSprite*>(inner)) {
+                                    if (auto sprite = typeinfo_cast<CCSprite*>(inner)) {
                                         if (sprite->getID() == "Lock") sprite->setVisible(newValue < unlockValue);
                                     }
                                 }
-                            } else if (auto colourIcon = dynamic_cast<ColorChannelSprite*>(iconNode)) {
+                            } else if (auto colourIcon = typeinfo_cast<ColorChannelSprite*>(iconNode)) {
                                 for (auto inner : CCArrayExt<CCNode*>(colourIcon->getChildren())) {
-                                    if (auto sprite = dynamic_cast<CCSprite*>(inner)) {
+                                    if (auto sprite = typeinfo_cast<CCSprite*>(inner)) {
                                         if (sprite->getID() == "Lock") sprite->setVisible(newValue < unlockValue);
                                     }
                                 }
-                            } else if (auto itemIcon = dynamic_cast<GJItemIcon*>(iconNode)) {
+                            } else if (auto itemIcon = typeinfo_cast<GJItemIcon*>(iconNode)) {
                                 for (auto inner : CCArrayExt<CCNode*>(itemIcon->getChildren())) {
-                                    if (auto sprite = dynamic_cast<CCSprite*>(inner)) {
+                                    if (auto sprite = typeinfo_cast<CCSprite*>(inner)) {
                                         if (sprite->getID() == "Lock") sprite->setVisible(newValue < unlockValue);
                                     }
                                 }

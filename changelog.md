@@ -1,4 +1,6 @@
 # Better Unlock Progression Changelog
+## v1.2.1
+- Crash prevention on Apple devices - all dynamic_cast changed into typeinfo_cast
 ## v1.2.0
 - Geode v5.0.0 / GD v2.2081
 - Fixed web requests to match v5
