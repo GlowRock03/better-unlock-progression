@@ -1,17 +1,18 @@
 #include "UnlockProgressionPopup.hpp"
 
-UnlockProgressionPopup* UnlockProgressionPopup::create(std::string const& text) {
+using geode::utils::web::WebResponse;
+using geode::utils::web::WebProgress;
 
-    auto winSize = CCDirector::sharedDirector()->getWinSize();
+UnlockProgressionPopup* UnlockProgressionPopup::create(const std::string& text) {
+    auto popup = new UnlockProgressionPopup;
+    popup->setID("Popup-Layer");
 
-    auto ret = new UnlockProgressionPopup();
-    ret->setID("Popup-Layer");
-    if (ret->initAnchored(466.58f, 256, text)) {
-        ret->autorelease();
-        return ret;
+    if (popup && popup->init(text)) {
+        popup->autorelease();
+        return popup;
     }
 
-    delete ret;
+    delete popup;
     return nullptr;
 }
 
@@ -22,7 +23,10 @@ UnlockProgressionPopup::~UnlockProgressionPopup() {
     }
 }
 
-bool UnlockProgressionPopup::setup(std::string const& text) {
+bool UnlockProgressionPopup::init(const std::string& text) {
+
+    if (!Popup::init(466.58f, 256.f))
+        return false;
 
     util = Utilities::getInstance();
 
@@ -39,9 +43,9 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
     m_pages->retain();
 
     createBackgroundUI();
-
     getAllStats();
 
+    // Your old data arrays
     std::vector<bool> showList(21);
     std::vector<std::string> modSettingKeys = {
         "show-star-page", "show-moon-page", "show-secret-coin-page", "show-user-coin-page",
@@ -50,6 +54,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
         "show-insane-page", "show-demon-page", "show-online-page", "show-daily-page",
         "show-map-pack-page", "show-gauntlet-page", "show-list-page", "show-most-liked-level-page", "show-rated-level-page"
     };
+
     std::vector<std::vector<Utilities::UnlockData*>> allUnlocksList = {
         util->starUnlockDataList, util->moonUnlockDataList, util->secretCoinUnlockDataList,
         util->userCoinUnlockDataList, util->diamondUnlockDataList, util->jumpsUnlockDataList,
@@ -59,6 +64,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
         util->completedDailyUnlockDataList, util->completedMapPacksUnlockDataList, util->completedGauntletsUnlockDataList,
         util->completedListsUnlockDataList, util->likesOnYourLevelUnlockDataList, util->creatorPointsUnlockDataList
     };
+
     std::vector<const char*> allTitleSprites = {
         "stars_spr.png"_spr, "moons_spr.png"_spr, "secret_coins_spr.png"_spr, "user_coins_spr.png"_spr,
         "diamonds_spr.png"_spr, "jumps_spr.png"_spr, "attempts_spr.png"_spr, "destroyed_players_spr.png"_spr,
@@ -67,8 +73,8 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
         "completed_daily_spr.png"_spr, "completed_map_packs_spr.png"_spr, "completed_gauntlets_spr.png"_spr,
         "completed_lists_spr.png"_spr, "most_liked_spr.png"_spr, "creator_points_spr.png"_spr
     };
-    std::vector<int> statsList(21);
-    statsList = {
+
+    std::vector<int> statsList = {
         util->m_playerStats.stars, util->m_playerStats.moons, util->m_playerStats.secretCoins, util->m_playerStats.userCoins,
         util->m_playerStats.diamonds, util->m_playerStats.jumps, util->m_playerStats.attempts, util->m_playerStats.destoryedPlayers,
         util->m_playerStats.friends, util->m_playerStats.followedCreators, util->m_playerStats.likesAndDislikes, util->m_playerStats.rateStarsOnLevels,
@@ -76,6 +82,7 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
         util->m_playerStats.completedMapPacks, util->m_playerStats.completedGauntlets, util->m_playerStats.completedLists, util->m_playerStats.maxLikes,
         util->m_playerStats.ratedLevels
     };
+
     std::vector<std::string> pageIdList = {
         "Stars-Progression", "Moons-Progression", "Secret-Coin-Progression", "User-Coin-Progression", "Diamond-Progression",
         "Jump-Progression", "Attempt-Progression", "Destroyed-Players-Progression", "Friend-Progression", "Followed-Creators-Progression",
@@ -85,15 +92,10 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
     };
 
     int disabledSettings = 0;
-    int j = 0;
-    for (const auto& key : modSettingKeys) {
-
-        bool value = Mod::get()->getSettingValue<bool>(key);
-        showList[j] = value;
-        if (!value) {
+    for (int j = 0; j < modSettingKeys.size(); ++j) {
+        showList[j] = Mod::get()->getSettingValue<bool>(modSettingKeys[j]);
+        if (!showList[j])
             ++disabledSettings;
-        }
-        ++j;
     }
 
     for (int i = 0; i < 21; ++i) {
@@ -110,19 +112,14 @@ bool UnlockProgressionPopup::setup(std::string const& text) {
 
     m_totalPages = 21 - disabledSettings;
 
-    bool disableArrows = false;
-
     if (m_totalPages == 0)  {
-
-        auto disableText = CCLabelBMFont::create("You have disabled every page in the mod. Please enable a page.", "bigFont.fnt");
+        auto disableText = CCLabelBMFont::create(
+            "You have disabled every page in the mod. Please enable a page.", "bigFont.fnt"
+        );
         disableText->setScale(0.3f);
         disableText->setPosition({233, 130});
         m_pageContainer->addChild(disableText);
-        disableArrows = true;
-    }
-
-    if (! disableArrows) {
-
+    } else {
         if (m_totalPages != 1) {
             createNavigationButtons();
         }

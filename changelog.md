@@ -1,4 +1,9 @@
 # Better Unlock Progression Changelog
+## v1.2.0
+- Geode v5.0.0 / GD v2.2081
+- Fixed web requests to match v5
+- Fixed hard CCNode casting
+- Fixed string comparsion when check CCNode IDs
 ## v1.1.4
 - Fixed Shadow on Mod Menu Button in the Garage
 ## v1.1.3

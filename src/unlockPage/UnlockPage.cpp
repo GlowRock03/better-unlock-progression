@@ -210,7 +210,7 @@ void UnlockPage::createRefreshButton() {
 
 void UnlockPage::openSupportMeLevel(CCObject* sender) {
 
-    int id = 114471227;
+    int id = 122518349; //Iris by me: 114471227, my niece's level: 122518349
     GameLevelManager::get()->m_levelManagerDelegate = MyLevelDownloadDelegate::get();
     GameLevelManager::sharedState()->getOnlineLevels(GJSearchObject::create(SearchType::Search, std::to_string(id)));
 }
@@ -316,6 +316,87 @@ void UnlockPage::requestMostLiked(int page) {
 
     log::info("Entered web request method");
 
+    web::WebRequest req;
+    req.userAgent("");
+    req.bodyString(fmt::format("secret=Wmfd2893gb7&type=5&page={}&str={}", page, userId));
+
+    req.onProgress([page](const web::WebProgress& progress) {
+    if (auto p = progress.downloadProgress()) {
+        log::info("Fetching page {} in progress... {}%", page, int(*p * 100));
+    }
+    });
+
+    mostLikedListener.spawn(
+        req.post("http://www.boomlings.com/database/getGJLevels21.php"), [this, page](web::WebResponse value) mutable {
+
+            if (value.cancelled() || value.error()) {
+                log::warn("Request failed or cancelled (code {})", value.code());
+                makeInfoPopup("Unexpected");
+                return;
+            }
+
+            auto result = value.string();
+            if (!result) {
+                log::error("Failed to decode response: {}", result.unwrapErr());
+                makeInfoPopup("Bad Response");
+                return;
+            }
+
+            auto str = result.unwrap();
+            log::info("Response for Page {}: {}", page, str);
+
+            if (str == "Curl failed: Couldn't resolve host name") {
+
+                log::warn("No levels found!");
+                makeInfoPopup("Bad Response");
+                return;
+            } else if (str == "-1") {
+
+                log::warn("No levels found!");
+                makeInfoPopup("No Response");
+                return;   
+            } else if (value.code() == 1015) {
+
+                log::warn("Rate Limit!");
+                makeInfoPopup("Rate Limit");
+                return;
+            }
+
+            // Parse response
+            auto [levels, total, offset, amount] = parseResponse(str);
+
+            log::info("Parsed Levels: {}", fmt::join(levels, ", "));
+            log::info("Total: {}, Offset: {}, Amount: {}", total, offset, amount);
+
+            processLevels(levels, userId);
+
+            // Continue fetching pages if needed
+            if (offset + amount < total) {
+
+                log::info("Fetching next page... current size of vector is: {}", allLikes.size());
+                requestMostLiked(page + 1);
+            } else {
+                log::info("All levels fetched: {}", allLikes.size());
+                log::info("All likes: {}", fmt::join(allLikes, ", "));
+
+                int maxLikes = findMaxLikes();
+                log::info("The level with the most likes has {} likes.", maxLikes);
+                
+                Mod::get()->setSavedValue<int>(fmt::format("most-liked-{}", userId), maxLikes);
+
+                util->updatePage(maxLikes, pageNode, util->likesOnYourLevelUnlockDataList, iconSprName);
+
+                makeInfoPopup("Most Liked");
+            }
+        }
+    );
+}
+
+/*
+void UnlockPage::requestMostLiked(int page) {
+
+    log::info("Entered web request method");
+
     // Send initial request to get total levels from server
 
     mostLikedListener.bind([this, page](web::WebTask::Event* e) mutable {
@@ -381,7 +462,7 @@ void UnlockPage::requestMostLiked(int page) {
     auto req = web::WebRequest().userAgent("").bodyString(fmt::format("secret=Wmfd2893gb7&type=5&page={}&str={}", page, userId));
     auto task = req.post("http://www.boomlings.com/database/getGJLevels21.php");
     mostLikedListener.setFilter(task);
-}
+} */
 
 void UnlockPage::processLevels(const std::vector<std::string>& levelObjects, int userId) {
 
@@ -431,6 +512,69 @@ int UnlockPage::findMaxLikes() {
 
 void UnlockPage::requestCreatorPoints() {
 
+    log::info("Requesting creator points");
+
+    web::WebRequest req;
+    req.userAgent("");
+    req.bodyString(fmt::format("secret=Wmfd2893gb7&targetAccountID={}", accountId));
+
+    // Optional progress logging
+    req.onProgress([](const web::WebProgress& progress) {
+        if (auto p = progress.downloadProgress()) {
+            log::info("Creator points request progress: {}%", int(*p * 100));
+        }
+    });
+
+    creatorPointsListener.spawn(
+        req.post("http://www.boomlings.com/database/getGJUserInfo20.php"),
+        [this](web::WebResponse value) {
+
+            if (value.cancelled() || value.error()) {
+                log::warn("Request failed or cancelled (code {})", value.code());
+                makeInfoPopup("Unexpected");
+                return;
+            }
+
+            auto result = value.string();
+            if (!result) {
+                log::error("Failed to decode response: {}", result.unwrapErr());
+                makeInfoPopup("Bad Response");
+                return;
+            }
+
+            auto str = result.unwrap();
+            log::info("Response: {}", str);
+
+            // server-side errors
+            if (str == "Curl failed: Couldn't resolve host name") {
+                log::warn("No creator points found!");
+                makeInfoPopup("Bad Response");
+                return;
+            }
+            else if (value.code() == 1015) {
+                log::warn("Rate Limit!");
+                makeInfoPopup("Rate Limit");
+                return;
+            }
+
+            // parse creator points
+            int creatorPoints = findCreatorPoints(str);
+            log::info("Extracted Creator Points: {}", creatorPoints);
+
+            Mod::get()->setSavedValue<int>(
+                fmt::format("creator-points-{}", accountId),
+                creatorPoints
+            );
+
+            util->updatePage(creatorPoints, pageNode, util->creatorPointsUnlockDataList, iconSprName);
+
+            makeInfoPopup("Creator Points");
+        }
+    );
+}
+/*
+void UnlockPage::requestCreatorPoints() {
+
     creatorPointsListener.bind([this](web::WebTask::Event* e) {
 
         if (web::WebResponse* value = e->getValue()) {
@@ -469,7 +613,7 @@ void UnlockPage::requestCreatorPoints() {
     auto req = web::WebRequest().userAgent("").bodyString(fmt::format("secret=Wmfd2893gb7&targetAccountID={}", accountId));
     auto task = req.post("http://www.boomlings.com/database/getGJUserInfo20.php");
     creatorPointsListener.setFilter(task);
-}
+} */
 
 int UnlockPage::findCreatorPoints(const std::string& fullResponse) {
 

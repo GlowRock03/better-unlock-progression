@@ -24,8 +24,8 @@ private:
 
     CCNode* pageNode;
 
-    EventListener<web::WebTask> mostLikedListener;
-    EventListener<web::WebTask> creatorPointsListener;
+    async::TaskHolder<web::WebResponse> mostLikedListener;
+    async::TaskHolder<web::WebResponse> creatorPointsListener;
     int userId;
     int accountId;
     std::vector<int> allLikes;

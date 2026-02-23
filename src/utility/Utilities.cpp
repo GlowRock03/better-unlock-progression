@@ -913,7 +913,7 @@ void Utilities::updatePage(int newValue, CCNode* pageNode, std::vector<UnlockDat
     int endIdx;
 
     std::vector<float> ratioList(unlockCount);
-    
+
     for (int i = 0; i < unlockCount; i++) {
         int prevValue = std::stoi(unlockList[i]->numberString);
         int nextValue = std::stoi(unlockList[i + 1]->numberString);
@@ -927,227 +927,175 @@ void Utilities::updatePage(int newValue, CCNode* pageNode, std::vector<UnlockDat
         }
     }
 
-    CCObject* tierObjects;
-    CCARRAY_FOREACH(pageNode->getChildren(), tierObjects) {
-        CCNode* tierNode = dynamic_cast<CCNode*>(tierObjects);
+    for (auto tierNode : CCArrayExt<CCNode*>(pageNode->getChildren())) {
 
-        if (tierNode->getID().compare("Tier-Node") == 0) {
+        if (tierNode->getID() != "Tier-Node") continue;
 
-            if (strcmp(iconSprName, "jumps_spr.png"_spr) == 0) {
+        // Determine start and end indices
+        if (strcmp(iconSprName, "jumps_spr.png"_spr) == 0) {
+            startIdx = tier * 8;
+            endIdx = (tier == tierCount - 1) ? unlockCount : std::min(startIdx + 8, unlockCount);
+        } else {
+            startIdx = tier * 10;
+            endIdx = (tier == tierCount - 1) ? unlockCount : std::min(startIdx + 10, unlockCount);
+        }
 
-                startIdx = tier * 8;
-                endIdx = (tier == tierCount - 1) ? unlockCount : std::min(startIdx + 8, unlockCount);
-            } else {
-        
-                startIdx = tier * 10;
-                endIdx = (tier == tierCount - 1) ? unlockCount : std::min(startIdx + 10, unlockCount);
+        int unlockIndex = 0;
+        for (auto node : CCArrayExt<CCNode*>(tierNode->getChildren())) {
+
+            // Progress bar
+            if (auto sliderBar = dynamic_cast<CCSprite*>(node)) {
+                if (sliderBar->getID() == "Slider-Bar") {
+
+                    auto originalWidthObj = dynamic_cast<CCFloat*>(sliderBar->getUserObject());
+                    float originalWidth = originalWidthObj->getValue();
+
+                    float scale = ratioList[unlockIndex] >= 0.98f ? originalWidth * 0.98f : originalWidth * ratioList[unlockIndex];
+                    sliderBar->setTextureRect(CCRectMake(0, 0, scale, sliderBar->getContentSize().height));
+                }
             }
 
-            int unlockIndex = 0;
-            CCObject* object;
-            CCARRAY_FOREACH(tierNode->getChildren(), object) {
-                CCNode* node = dynamic_cast<CCNode*>(object);
+            // Progress text
+            if (auto progressText = dynamic_cast<CCLabelBMFont*>(node)) {
+                if (progressText->getID() == "Progress-Text") {
 
-                float ratio = ratioList[unlockIndex];
+                    bool progressPlaced = false;
+                    for (int progressIndex = startIdx + 1; progressIndex <= endIdx; ++progressIndex) {
 
-                if (auto sliderBar = dynamic_cast<CCSprite*>(node)) {
-                    if (sliderBar->getID().compare("Slider-Bar") == 0) {
-    
-                        auto originalWidthObj = dynamic_cast<CCFloat*>(sliderBar->getUserObject());
-                        float originalWidth = originalWidthObj->getValue();
-                
-                        float scale = ratio >= 0.98f ? originalWidth * 0.98f : originalWidth * ratio;
-    
-                        sliderBar->setTextureRect(CCRectMake(0, 0, scale, sliderBar->getContentSize().height));
-                    }
-                }
-    
-                if (auto progressText = dynamic_cast<CCLabelBMFont*>(node)) {
-                    if (progressText->getID().compare("Progress-Text") == 0) {
+                        if (progressIndex - 1 >= ratioList.size() || progressIndex >= unlockList.size()) break;
 
+                        float ratio = ratioList[progressIndex - 1];
+                        bool isInTier = newValue >= std::stoi(unlockList[startIdx]->numberString) &&
+                                        newValue < std::stoi(unlockList[endIdx]->numberString);
 
-                        bool progressPlaced = false;
-                        for (int progressIndex = startIdx + 1;  progressIndex <= endIdx; ++progressIndex) {
-
-                            ratio = ratioList[progressIndex - 1];
-
-                            bool isInTier = newValue >= std::stoi(unlockList[startIdx]->numberString) && newValue < std::stoi(unlockList[endIdx]->numberString);
-                            if (ratio < 1.f && isInTier && !progressPlaced) {
-                        
-                                progressText->setString(addCommas(std::to_string(newValue).c_str()));
-                                progressText->setPosition({ calculateXPosition("progress_text", unlockList[progressIndex]->index, unlockList[progressIndex]->pageSize, ""), calculateYPosition("progress_text", unlockList[progressIndex]->index, unlockList[progressIndex]->pageSize) });
-                                progressPlaced = true;
-                            }
-                        }
-                        if (newValue >= std::stoi(unlockList[endIdx]->numberString)) {
-                            
-                            progressText->setString("");
-                            
+                        if (ratio < 1.f && isInTier && !progressPlaced) {
+                            progressText->setString(addCommas(std::to_string(newValue).c_str()));
+                            progressText->setPosition({
+                                calculateXPosition("progress_text", unlockList[progressIndex]->index, unlockList[progressIndex]->pageSize, ""),
+                                calculateYPosition("progress_text", unlockList[progressIndex]->index, unlockList[progressIndex]->pageSize)
+                            });
+                            progressPlaced = true;
                         }
                     }
+
+                    if (newValue >= std::stoi(unlockList[endIdx]->numberString)) {
+                        progressText->setString("");
+                    }
                 }
+            }
 
-                ratio = ratioList[unlockIndex];
+            // Unlock icons
+            if (auto buttonMenu = dynamic_cast<CCMenu*>(node)) {
 
-                if (auto buttonMenu = dynamic_cast<CCMenu*>(node)) {
+                int lockCount = 0;
+                for (auto unlockButtonObj : CCArrayExt<CCNode*>(buttonMenu->getChildren())) {
 
-                    CCObject* button;
-                    int lockCount = 0;
-                    CCARRAY_FOREACH(buttonMenu->getChildren(), button) {
-    
-                        auto unlockButton = dynamic_cast<CCMenuItemSpriteExtra*>(button);
-                        if (!unlockButton) continue;
-                
-                        auto unlockInfo = static_cast<UnlockInfo*>(unlockButton->getUserObject());
-                        if (!unlockInfo) continue;
-    
-                        CCObject* iconObject;
-                        CCARRAY_FOREACH(unlockButton->getChildren(), iconObject) {
+                    auto unlockButton = dynamic_cast<CCMenuItemSpriteExtra*>(unlockButtonObj);
+                    if (!unlockButton) continue;
 
-                            ratio = ratioList[lockCount];
-    
-                            if (auto icon = dynamic_cast<SimplePlayer*>(iconObject)) {
+                    auto unlockInfo = static_cast<UnlockInfo*>(unlockButton->getUserObject());
+                    if (!unlockInfo) continue;
 
-                                if (ratio >= 1.f) {  // Unlocked
+                    for (auto iconObject : CCArrayExt<CCNode*>(unlockButton->getChildren())) {
+
+                        if (lockCount >= unlockList.size()) break;
+                        int unlockValue = std::stoi(unlockList[lockCount]->numberString);
+
+                        auto unlockFunc = [&](CCNode* iconNode) {
+                            if (auto icon = dynamic_cast<SimplePlayer*>(iconNode)) {
+                                if (newValue >= unlockValue) {
                                     icon->setColors(gameManager->colorForIdx(gameManager->getPlayerColor()), gameManager->colorForIdx(gameManager->getPlayerColor2()));
-                                    if (gameManager->m_playerGlow) {
+                                    if (gameManager->m_playerGlow)
                                         icon->setGlowOutline(gameManager->colorForIdx(gameManager->getPlayerGlowColor()));
-                                    }
-                                } else {  // Locked
+                                } else {
                                     icon->setColors(p1Grey, p2Grey);
                                     icon->disableGlowOutline();
                                 }
 
-                                CCObject* iconInner;
-                                
-                                CCARRAY_FOREACH(icon->getChildren(), iconInner) {
-
-                                    if (auto sprite = dynamic_cast<CCSprite*>(iconInner)) {
-
-                                        if (sprite->getID().compare("Lock") == 0) {
-
-                                            if (ratio >= 1.f) {
-                                            
-                                                sprite->setVisible(false);
-                                            } else {
-
-                                                sprite->setVisible(true);
-                                            }
-                                        }
+                                for (auto inner : CCArrayExt<CCNode*>(icon->getChildren())) {
+                                    if (auto sprite = dynamic_cast<CCSprite*>(inner)) {
+                                        if (sprite->getID() == "Lock") sprite->setVisible(newValue < unlockValue);
                                     }
                                 }
-                                ++lockCount;
-                            } else if (auto colourIcon = dynamic_cast<ColorChannelSprite*>(iconObject)) {
-
-                                CCObject* iconInner;
-                                CCARRAY_FOREACH(colourIcon->getChildren(), iconInner) {
-
-                                    if (auto sprite = dynamic_cast<CCSprite*>(iconInner)) {
-
-                                        if (sprite->getID().compare("Lock") == 0) {
-
-                                            if (ratio >= 1.f) {
-                                            
-                                                sprite->setVisible(false);
-                                            } else {
-
-                                                sprite->setVisible(true);
-                                            }
-                                        }
+                            } else if (auto colourIcon = dynamic_cast<ColorChannelSprite*>(iconNode)) {
+                                for (auto inner : CCArrayExt<CCNode*>(colourIcon->getChildren())) {
+                                    if (auto sprite = dynamic_cast<CCSprite*>(inner)) {
+                                        if (sprite->getID() == "Lock") sprite->setVisible(newValue < unlockValue);
                                     }
                                 }
-
-                                ++lockCount;
-                            } else if (auto itemIcon = dynamic_cast<GJItemIcon*>(iconObject)) {
-
-                                CCObject* iconInner;
-                                CCARRAY_FOREACH(itemIcon->getChildren(), iconInner) {
-
-                                    if (auto sprite = dynamic_cast<CCSprite*>(iconInner)) {
-
-                                        if (sprite->getID().compare("Lock") == 0) {
-
-                                            if (ratio >= 1.f) {
-                                            
-                                                sprite->setVisible(false);
-                                            } else {
-
-                                                sprite->setVisible(true);
-                                            }
-                                        }
+                            } else if (auto itemIcon = dynamic_cast<GJItemIcon*>(iconNode)) {
+                                for (auto inner : CCArrayExt<CCNode*>(itemIcon->getChildren())) {
+                                    if (auto sprite = dynamic_cast<CCSprite*>(inner)) {
+                                        if (sprite->getID() == "Lock") sprite->setVisible(newValue < unlockValue);
                                     }
                                 }
-
-                                ++lockCount;
                             }
-                        }
+                        };
+
+                        unlockFunc(iconObject);
+                        ++lockCount;
                     }
                 }
+            }
 
-                unlockIndex++;
-            }   
+            unlockIndex++;
         }
+
+        tier++;
     }
-    
-    CCObject* checkTier;
-    CCARRAY_FOREACH(pageNode->getChildren(), checkTier) {
-        CCNode* tierNode = dynamic_cast<CCNode*>(checkTier);
 
-        if (tierNode->getID().compare("Tier-Node") == 0) {
+    // Completion stars
+    for (auto tierNode : CCArrayExt<CCNode*>(pageNode->getChildren())) {
+        if (tierNode->getID() != "Tier-Node") continue;
 
-            CCObject* checkNode;
-            bool found = false;
-            CCARRAY_FOREACH(tierNode->getChildren(), checkNode) {
-                CCNode* innerNode = dynamic_cast<CCNode*>(checkNode);
-
-                if (! (innerNode->getID().compare("Completion-Star-1") != 0 && innerNode->getID().compare("Completion-Star-2") != 0)) {
-
-                    found = true;
-                }
-            }
-
-            if (strcmp(iconSprName, "jumps_spr.png"_spr) == 0) {
-
-                startIdx = tier * 8;
-                endIdx = (tier == tierCount - 1) ? unlockCount : std::min(startIdx + 8, unlockCount);
-            } else {
-        
-                startIdx = tier * 10;
-                endIdx = (tier == tierCount - 1) ? unlockCount : std::min(startIdx + 10, unlockCount);
-            }
-
-            if (! found && newValue >= std::stoi(unlockList[endIdx]->numberString)) {
-
-                auto tierCompletedStar1 = CCSprite::createWithSpriteFrameName("GJ_bigStar_001.png");
-                tierCompletedStar1->setID("Tier-Complete-Top");
-                auto tierCompletedStarGlow1 = CCSprite::createWithSpriteFrameName("GJ_bigStar_glow_001.png");
-                tierCompletedStarGlow1->setID("Tier-Complete-Bottom");
-                tierCompletedStarGlow1->setAnchorPoint({0, 0});
-                tierCompletedStarGlow1->setPosition({-11, -11});
-                tierCompletedStarGlow1->setZOrder(-1);
-                tierCompletedStar1->setID("Completion-Star-1");
-                tierCompletedStar1->addChild(tierCompletedStarGlow1);
-            
-                auto tierCompletedStar2 = CCSprite::createWithSpriteFrameName("GJ_bigStar_001.png");
-                tierCompletedStar2->setID("Tier-Complete-Top");
-                auto tierCompletedStarGlow2 = CCSprite::createWithSpriteFrameName("GJ_bigStar_glow_001.png");
-                tierCompletedStarGlow2->setID("Tier-Complete-Bottom");
-                tierCompletedStarGlow2->setAnchorPoint({0, 0});
-                tierCompletedStarGlow2->setPosition({-11, -11});
-                tierCompletedStarGlow2->setZOrder(-1);
-                tierCompletedStar2->setID("Completion-Star-2");
-                tierCompletedStar2->addChild(tierCompletedStarGlow2);
-                
-                tierCompletedStar1->setAnchorPoint({0, 0});
-                tierCompletedStar2->setAnchorPoint({0, 0});
-                tierCompletedStar1->setPosition({-72, 8});
-                tierCompletedStar2->setPosition({77, 8});
-                tierCompletedStar1->setScale(0.5f);
-                tierCompletedStar2->setScale(0.5f);
-                tierNode->addChild(tierCompletedStar1);
-                tierNode->addChild(tierCompletedStar2);
+        bool found = false;
+        for (auto innerNode : CCArrayExt<CCNode*>(tierNode->getChildren())) {
+            if (innerNode->getID() == "Completion-Star-1" || innerNode->getID() == "Completion-Star-2") {
+                found = true;
             }
         }
+
+        if (strcmp(iconSprName, "jumps_spr.png"_spr) == 0) {
+            startIdx = tier * 8;
+            endIdx = (tier == tierCount - 1) ? unlockCount : std::min(startIdx + 8, unlockCount);
+        } else {
+            startIdx = tier * 10;
+            endIdx = (tier == tierCount - 1) ? unlockCount : std::min(startIdx + 10, unlockCount);
+        }
+
+        if (!found && newValue >= std::stoi(unlockList[endIdx]->numberString)) {
+
+            auto tierCompletedStar1 = CCSprite::createWithSpriteFrameName("GJ_bigStar_001.png");
+            tierCompletedStar1->setID("Tier-Complete-Top");
+            auto tierCompletedStarGlow1 = CCSprite::createWithSpriteFrameName("GJ_bigStar_glow_001.png");
+            tierCompletedStarGlow1->setID("Tier-Complete-Bottom");
+            tierCompletedStarGlow1->setAnchorPoint({0, 0});
+            tierCompletedStarGlow1->setPosition({-11, -11});
+            tierCompletedStarGlow1->setZOrder(-1);
+            tierCompletedStar1->setID("Completion-Star-1");
+            tierCompletedStar1->addChild(tierCompletedStarGlow1);
+
+            auto tierCompletedStar2 = CCSprite::createWithSpriteFrameName("GJ_bigStar_001.png");
+            tierCompletedStar2->setID("Tier-Complete-Top");
+            auto tierCompletedStarGlow2 = CCSprite::createWithSpriteFrameName("GJ_bigStar_glow_001.png");
+            tierCompletedStarGlow2->setID("Tier-Complete-Bottom");
+            tierCompletedStarGlow2->setAnchorPoint({0, 0});
+            tierCompletedStarGlow2->setPosition({-11, -11});
+            tierCompletedStarGlow2->setZOrder(-1);
+            tierCompletedStar2->setID("Completion-Star-2");
+            tierCompletedStar2->addChild(tierCompletedStarGlow2);
+
+            tierCompletedStar1->setAnchorPoint({0, 0});
+            tierCompletedStar2->setAnchorPoint({0, 0});
+            tierCompletedStar1->setPosition({-72, 8});
+            tierCompletedStar2->setPosition({77, 8});
+            tierCompletedStar1->setScale(0.5f);
+            tierCompletedStar2->setScale(0.5f);
+            tierNode->addChild(tierCompletedStar1);
+            tierNode->addChild(tierCompletedStar2);
+        }
+
+        tier++;
     }
 
     pageNode->visit();

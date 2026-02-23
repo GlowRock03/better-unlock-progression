@@ -15,7 +15,7 @@
 
 using namespace geode::prelude;
 
-class UnlockProgressionPopup : public geode::Popup<std::string const&> {
+class UnlockProgressionPopup : public geode::Popup {
 private:
 
     GameStatsManager* gameStatsManager;
@@ -37,9 +37,9 @@ private:
 
 public:
 
-    static UnlockProgressionPopup* create(std::string const& text);
+    static UnlockProgressionPopup* create(const std::string& text);
     ~UnlockProgressionPopup();
-    bool setup(std::string const& text) override;
+    bool init(const std::string& text);
     void createBackgroundUI();
     void createNavigationButtons();
     void createBottomNavigationButtons();
