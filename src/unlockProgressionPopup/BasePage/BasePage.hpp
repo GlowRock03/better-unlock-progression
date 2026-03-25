@@ -1,11 +1,10 @@
-#ifndef BASEPAGE_HPP
-#define BASEPAGE_HPP
+#pragma once
 
 #include <Geode/Geode.hpp>
 #include <Geode/utils/cocos.hpp>
 
-#include "../utility/Utilities.hpp"
-#include "../modify/MyItemInfoPopup.hpp"
+#include "../../Utility/Utilities.hpp"
+#include "../../Modify/ItemInfoPopup/MyItemInfoPopup.hpp"
 
 using namespace geode::prelude;
 
@@ -47,5 +46,3 @@ public:
     virtual CCNode* createPage(int value) = 0;
     virtual CCNode* createTier(int tier, int value) = 0;
 };
-
-#endif

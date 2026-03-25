@@ -1,5 +1,4 @@
-#ifndef UNLOCKPAGE_HPP
-#define UNLOCKPAGE_HPP
+#pragma once
 
 #include <Geode/Geode.hpp>
 #include <Geode/utils/web.hpp>
@@ -8,13 +7,13 @@
 #include <Geode/binding/LevelDownloadDelegate.hpp>
 #include <Geode/ui/Notification.hpp>
 
-#include "../basePage/BasePage.hpp"
-#include "../utility/Utilities.hpp"
-#include "../utility/MyLevelDownloadDelegate.hpp"
+#include "../BasePage/BasePage.hpp"
+#include "../../Utility/Utilities.hpp"
+#include "../../Utility/Delegate/MyLevelDownloadDelegate.hpp"
 
 using namespace geode::prelude;
 
-class UnlockPage : public BasePage {
+class SpecialPage : public BasePage {
 private:
 
     int tierCount;
@@ -32,8 +31,8 @@ private:
     
 public:
 
-    UnlockPage(FLAlertLayer* parentPopup, std::vector<Utilities::UnlockData*> unlockList, const char* iconSprName);
-    ~UnlockPage();
+    SpecialPage(FLAlertLayer* parentPopup, std::vector<Utilities::UnlockData*> unlockList, const char* iconSprName);
+    ~SpecialPage();
     
     CCNode* createPage(int value) override;
     CCNode* createTier(int tier, int value) override;
@@ -55,5 +54,3 @@ public:
     void requestCreatorPoints();
     int findCreatorPoints(const std::string& fullResponse);
 };
-
-#endif

@@ -1,13 +1,10 @@
 #pragma once
 
-#ifndef UTILITIES_HPP
-#define UTILITIES_HPP
-
 #include <Geode/Geode.hpp>
 #include <Geode/utils/cocos.hpp>
 #include <ccTypes.h>
 
-#include "../modify/MyItemInfoPopup.hpp"
+#include "../Modify/ItemInfoPopup/MyItemInfoPopup.hpp"
 
 using namespace geode::prelude;
 
@@ -18,8 +15,6 @@ private:
     Utilities();    
 
 public:
-
-    // some class members 
 
     struct PlayerStats {
         int stars;
@@ -118,5 +113,3 @@ public:
 
     std::vector<std::string> split(const std::string& str, const std::string& delimiter);
 };
-
-#endif

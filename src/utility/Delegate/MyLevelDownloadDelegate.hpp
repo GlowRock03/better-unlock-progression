@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef MYLEVELDOWNLOADDELEGATE_HPP
-#define MYLEVELDOWNLOADDELEGATE_HPP
-
 #include <Geode/Geode.hpp>
 #include <Geode/utils/cocos.hpp>
 #include <Geode/binding/GameLevelManager.hpp>
@@ -25,5 +22,3 @@ public:
     void loadLevelsFinished(CCArray* levels, const char* key, int) override;
     void loadLevelsFailed(const char* key, int) override;
 };
-
-#endif

@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef UNLOCKPROGRESSIONPOPUP_HPP
-#define UNLOCKPROGRESSIONPOPUP_HPP
-
 #include <Geode/Geode.hpp>
 #include <Geode/utils/cocos.hpp>
 #include <Geode/modify/GJGarageLayer.hpp>
@@ -10,8 +7,8 @@
 #include <Geode/loader/Event.hpp>
 #include <Geode/binding/ProfilePage.hpp>
 
-#include "../utility/Utilities.hpp" 
-#include "../unlockPage/UnlockPage.hpp"
+#include "../Utility/Utilities.hpp" 
+#include "SpecialPage/SpecialPage.hpp"
 
 using namespace geode::prelude;
 
@@ -53,5 +50,3 @@ public:
     void updateButtonVisibility();
     void getAllStats();
 };
-
-#endif

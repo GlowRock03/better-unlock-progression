@@ -100,7 +100,7 @@ bool UnlockProgressionPopup::init(const std::string& text) {
 
     for (int i = 0; i < 21; ++i) {
         if (showList[i]) {
-            UnlockPage* page = new UnlockPage(this, allUnlocksList[i], allTitleSprites[i]);
+            SpecialPage* page = new SpecialPage(this, allUnlocksList[i], allTitleSprites[i]);
             CCNode* pageContainer = page->createPage(statsList[i]);
             pageContainer->setID(pageIdList[i]);
             pageContainer->setPosition({5.75f, 0});

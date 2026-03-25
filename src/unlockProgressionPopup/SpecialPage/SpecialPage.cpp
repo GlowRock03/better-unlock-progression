@@ -1,6 +1,6 @@
-#include "UnlockPage.hpp"
+#include "SpecialPage.hpp"
 
-UnlockPage::UnlockPage(FLAlertLayer* parentPopup, std::vector<Utilities::UnlockData*> unlockList, const char* iconSprName) : BasePage(parentPopup), unlockList(unlockList), iconSprName(iconSprName) {
+SpecialPage::SpecialPage(FLAlertLayer* parentPopup, std::vector<Utilities::UnlockData*> unlockList, const char* iconSprName) : BasePage(parentPopup), unlockList(unlockList), iconSprName(iconSprName) {
     
     unlockCount = (int)unlockList.size() - 1;
     tierCount = (unlockCount + 9) / 10;
@@ -8,9 +8,9 @@ UnlockPage::UnlockPage(FLAlertLayer* parentPopup, std::vector<Utilities::UnlockD
     accountId = GJAccountManager::sharedState()->m_accountID;
 }
 
-UnlockPage::~UnlockPage() {}
+SpecialPage::~SpecialPage() {}
 
-CCNode* UnlockPage::createPage(int value) {
+CCNode* SpecialPage::createPage(int value) {
 
     pageContainer->setPosition({0, 0});
     buttonMenu->setPosition({147, -200});
@@ -40,7 +40,7 @@ CCNode* UnlockPage::createPage(int value) {
     return pageContainer;
 }
 
-CCNode* UnlockPage::createTier(int tier, int value) {
+CCNode* SpecialPage::createTier(int tier, int value) {
     
     auto tierContainer = CCNode::create();
     tierContainer->setPosition({0, 0});
@@ -133,7 +133,7 @@ CCNode* UnlockPage::createTier(int tier, int value) {
 }
 
 
-void UnlockPage::createRefreshButton() {
+void SpecialPage::createRefreshButton() {
 
     CCSprite* refreshSpr = CCSprite::createWithSpriteFrameName("GJ_replayBtn_001.png");
     refreshSpr->setID("Refresh-Sprite");
@@ -147,7 +147,7 @@ void UnlockPage::createRefreshButton() {
         refreshButton = CCMenuItemSpriteExtra::create(
             refreshSpr,
             this,
-            menu_selector(UnlockPage::refreshFriends)
+            menu_selector(SpecialPage::refreshFriends)
         );
     } else if (std::string(iconSprName).compare("most_liked_spr.png"_spr) == 0) {
 
@@ -176,12 +176,12 @@ void UnlockPage::createRefreshButton() {
         refreshButton = CCMenuItemSpriteExtra::create(
             refreshSpr,
             this,
-            menu_selector(UnlockPage::refreshMaxLikes)
+            menu_selector(SpecialPage::refreshMaxLikes)
         );
         supportMeButton = CCMenuItemSpriteExtra::create(
             supportSpr,
             this,
-            menu_selector(UnlockPage::openSupportMeLevel)
+            menu_selector(SpecialPage::openSupportMeLevel)
         );
 
         supportMeButton->setID("Support-Button");
@@ -193,7 +193,7 @@ void UnlockPage::createRefreshButton() {
         refreshButton = CCMenuItemSpriteExtra::create(
             refreshSpr,
             this,
-            menu_selector(UnlockPage::refreshCreatorPoints)
+            menu_selector(SpecialPage::refreshCreatorPoints)
         );
     }
     refreshText->setID("Refresh-Text");
@@ -208,31 +208,31 @@ void UnlockPage::createRefreshButton() {
     buttonMenu->addChild(refreshButton);
 }
 
-void UnlockPage::openSupportMeLevel(CCObject* sender) {
+void SpecialPage::openSupportMeLevel(CCObject* sender) {
 
     int id = 122518349; //Iris by me: 114471227, my niece's level: 122518349
     GameLevelManager::get()->m_levelManagerDelegate = MyLevelDownloadDelegate::get();
     GameLevelManager::sharedState()->getOnlineLevels(GJSearchObject::create(SearchType::Search, std::to_string(id)));
 }
 
-void UnlockPage::refreshFriends(CCObject* sender) {
+void SpecialPage::refreshFriends(CCObject* sender) {
 
     int num = processFriendCount();
     util->updatePage(num, pageNode, util->friendsUnlockDataList, iconSprName);
     makeInfoPopup("Friends");
 }
 
-void UnlockPage::refreshMaxLikes(CCObject* sender) {
+void SpecialPage::refreshMaxLikes(CCObject* sender) {
 
     requestMostLiked(0);
 }
 
-void UnlockPage::refreshCreatorPoints(CCObject* sender) {
+void SpecialPage::refreshCreatorPoints(CCObject* sender) {
 
     requestCreatorPoints();
 }
 
-void UnlockPage::makeInfoPopup(std::string type) {
+void SpecialPage::makeInfoPopup(std::string type) {
 
     if (type.compare("Friends") == 0) {
 
@@ -279,7 +279,7 @@ void UnlockPage::makeInfoPopup(std::string type) {
     }
 }
 
-int UnlockPage::processFriendCount() {
+int SpecialPage::processFriendCount() {
 
     FriendsProfilePage* m_friendsPage = FriendsProfilePage::create(UserListType::Friends);
             
@@ -312,7 +312,7 @@ int UnlockPage::processFriendCount() {
 }
 
 
-void UnlockPage::requestMostLiked(int page) {
+void SpecialPage::requestMostLiked(int page) {
 
     log::info("Entered web request method");
 
@@ -393,7 +393,7 @@ void UnlockPage::requestMostLiked(int page) {
 }
 
 /*
-void UnlockPage::requestMostLiked(int page) {
+void SpecialPage::requestMostLiked(int page) {
 
     log::info("Entered web request method");
 
@@ -464,7 +464,7 @@ void UnlockPage::requestMostLiked(int page) {
     mostLikedListener.setFilter(task);
 } */
 
-void UnlockPage::processLevels(const std::vector<std::string>& levelObjects, int userId) {
+void SpecialPage::processLevels(const std::vector<std::string>& levelObjects, int userId) {
 
     std::vector<std::tuple<int, int>> levels;
 
@@ -487,7 +487,7 @@ void UnlockPage::processLevels(const std::vector<std::string>& levelObjects, int
     }
 }
 
-std::tuple<std::vector<std::string>, int, int, int> UnlockPage::parseResponse(const std::string& response) {
+std::tuple<std::vector<std::string>, int, int, int> SpecialPage::parseResponse(const std::string& response) {
     // Split the response into parts
     auto parts = util->split(response, "#");
 
@@ -504,13 +504,13 @@ std::tuple<std::vector<std::string>, int, int, int> UnlockPage::parseResponse(co
     return {levels, total, offset, amount};
 }
 
-int UnlockPage::findMaxLikes() {
+int SpecialPage::findMaxLikes() {
 
     return *max_element(allLikes.begin(), allLikes.end());
 }
 
 
-void UnlockPage::requestCreatorPoints() {
+void SpecialPage::requestCreatorPoints() {
 
     log::info("Requesting creator points");
 
@@ -573,7 +573,7 @@ void UnlockPage::requestCreatorPoints() {
     );
 }
 /*
-void UnlockPage::requestCreatorPoints() {
+void SpecialPage::requestCreatorPoints() {
 
     creatorPointsListener.bind([this](web::WebTask::Event* e) {
 
@@ -615,7 +615,7 @@ void UnlockPage::requestCreatorPoints() {
     creatorPointsListener.setFilter(task);
 } */
 
-int UnlockPage::findCreatorPoints(const std::string& fullResponse) {
+int SpecialPage::findCreatorPoints(const std::string& fullResponse) {
 
     int creatorPoints = 0;
     auto keyValuePairs = util->split(fullResponse, ":");

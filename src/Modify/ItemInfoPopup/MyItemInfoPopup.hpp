@@ -1,13 +1,10 @@
 #pragma once
 
-#ifndef MYITEMINFOPOPUP_HPP
-#define MYITEMINFOPOPUP_HPP
-
 #include <Geode/Geode.hpp>
+#include <Geode/modify/ItemInfoPopup.hpp>
 
 using namespace geode::prelude;
 
-#include <Geode/modify/ItemInfoPopup.hpp>
 class $modify(MyItemInfoPopup, ItemInfoPopup) {
 public:
 
@@ -17,5 +14,3 @@ private:
 
     void applyCustomizations();
 };
-
-#endif
